@@ -9,13 +9,13 @@ PSS Player is a premium, dark-themed music player powered by the **YouTube IFram
 ## 📸 Screen Previews
 
 ### 1. Login Gateway (Drifting Ambient Background)
-![Login Gateway Screen](./assets/screenshots/login_screen.png)
+![Login Gateway Screen](./assets/screenshots/login_v2.png)
 
 ### 2. Main Player Workspace (Frosted Glass Panels & Audio Waves)
-![Player Workspace](./assets/screenshots/player_workspace.png)
+![Player Workspace](./assets/screenshots/workspace_v2.png)
 
 ### 3. Mobile Responsive Layout (Single-Column App View)
-![Mobile View Stack](./assets/screenshots/mobile_view.png)
+![Mobile View Stack](./assets/screenshots/mobile_v2.png)
 
 ---
 
