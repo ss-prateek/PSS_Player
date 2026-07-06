@@ -1,84 +1,91 @@
 # PSS Player 🎵
 
-A premium, responsive, dark-themed music player featuring **liquid glassmorphism styling**, powered by the **YouTube IFrame API**, and connected to a serverless **Google Sheets database** for user login tracking.
+PSS Player is a premium, dark-themed music player powered by the **YouTube IFrame API** and styled with modern **liquid glassmorphism design principles**. It features a serverless database backend utilizing **Google Apps Script** to log user logins directly to a Google Sheet.
 
 ---
 
-## 🌌 Live Demo & Visuals
+## 📊 Architectural Visuals
 
-> [!TIP]
-> You can host this repository for free on **GitHub Pages** (Settings ➡️ Pages ➡️ Deploy from `main` branch) to get a live, shareable link instantly!
+### 1. Panel Layout & Stacking Layers (Z-Index Grid)
+This diagram explains how the elements are layered on top of each other, allowing the animated background fog to glow through the transparent panels.
 
----
-
-## 🚀 Key Features
-
-* **🎨 Liquid Glassmorphism UI:** Features floating monochrome ambient background spheres drifting slowly behind semi-transparent, frosted-glass panels (`backdrop-filter: blur(12px)`).
-* **🔒 Secure Caching Logins:** Full-screen greeting gateway that validates inputs and caches sessions locally using `localStorage` so users remain logged in.
-* **📊 Serverless Sheets Logging:** Connects to a private Google Sheet using Google Apps Script. Logs user logins with names, emails, and server-side timestamps.
-* **🎵 Advanced Playback Utilities:** Includes **Shuffle mode** (randomizes skip index), **Repeat mode** (replays active track on end), and a **Surprise Me** button (picks a random song from the database).
-* **✨ Glowing Audio Visualizer:** 15 glowing, monochrome equalizer bars that bounce organically when music is active and dim to a flat baseline when paused.
-* **📱 Adaptive Breakpoints:**
-  * **Desktop:** Three-panel sidebar layout.
-  * **Tablets:** Slide-out library drawer with a custom circular liquid-glass close button.
-  * **Mobile:** Vertical grid stacking with nowrap pills to fit narrow screens cleanly.
-
----
-
-## 🛠️ Technology Stack
-
-* **Frontend Structure:** HTML5 (Semantic elements)
-* **Design & Styling:** Vanilla CSS3 (Custom keyframes, resets, and glassmorphic designs)
-* **Logical Engine:** Vanilla JavaScript ES6 (State management, event bubbles, and array mapping)
-* **Media Streaming:** YouTube IFrame Player API (Direct stream binding, controls bypass, and active time-scrubbing queries)
-* **Database Pipeline:** Google Apps Script Web App (Redirect-safe GET request pipeline)
-
----
-
-## ⚙️ Quick Installation & Setup
-
-### 1. Clone the project locally
-```bash
-git clone https://github.com/ss-prateek/PSS_Player.git
-cd PSS_Player
+```mermaid
+graph TD
+    A[Browser Viewport] --> B[Background Blobs <br> z-index: 1 / fixed]
+    A --> C[Player Workspace Container <br> z-index: 10 / relative]
+    A --> D[Full-Screen Login Overlay <br> z-index: 9999 / fixed]
+    
+    C --> E[1. Left Sidebar: brand & library]
+    C --> F[2. Middle Column: song lists & search]
+    C --> G[3. Right Column: YouTube & controls]
 ```
 
-### 2. Connect your Google Sheet (Database)
-To track user logins in your own Google Sheet:
-1. Create a blank spreadsheet on [Google Sheets](https://sheets.google.com).
-2. Go to **Extensions ➡️ Apps Script**.
-3. Replace the template code with this script:
-   ```javascript
-   function doGet(e) {
-     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-     var name = e.parameter.name;
-     var email = e.parameter.email;
-     sheet.appendRow([new Date(), name, email]);
-     return ContentService.createTextOutput("Success")
-                          .setMimeType(ContentService.MimeType.TEXT);
-   }
-   ```
-4. Save and click **Deploy ➡️ New deployment**.
-5. Select **Web app** as the type, set *Execute as* to **Me**, and *Who has access* to **Anyone**.
-6. Deploy, authorize permissions, and copy the **Web App URL**.
-7. Open **`music_card.js`** in your project, and paste your URL on line 72:
-   ```javascript
-   const GOOGLE_SHEET_API_URL = "YOUR_DEPLOYED_URL_HERE";
-   ```
+---
 
-### 3. Open the player
-Launch `index.html` in your browser (or use VS Code's *Live Server* extension) and enjoy your player!
+### 2. Login & Serverless Database Pipeline
+This sequence diagram shows how your name and email are validated on the client side, cached in browser memory, and posted securely to your Google Sheet without CORS blocks.
+
+```mermaid
+sequenceDiagram
+    participant User as Visitor
+    participant UI as Player Frontend
+    participant Storage as LocalStorage (Browser)
+    participant API as Google Apps Script (Web App)
+    participant Sheet as Google Sheets
+
+    User->>UI: Enters Name & Email
+    UI->>UI: Validates Name & Email Syntax
+    alt Inputs Valid
+        UI->>Storage: Caches "userProfile" (Name, Email, Time)
+        UI->>UI: Fades out login card, reveals player
+        UI->>API: Sends GET Request (no-cors redirects)
+        API->>Sheet: Appends row: [Timestamp, Name, Email]
+        API-->>UI: Returns 200 "Success"
+    else Inputs Invalid
+        UI-->>User: Displays red validation error
+    end
+```
 
 ---
 
-## 📄 Documentation Manual
-For a deep-dive, line-by-line developer manual explaining the CSS visual physics, sequence diagrams, and detailed logic wrappers, refer to the compiled documentation folder:
-* 📄 **Markdown Document:** [PSS_Player_Manual.md](./PSS_Player_Manual.md)
-* 📂 **Print-Ready PDF:** [PSS_Player_Manual.pdf](./PSS_Player_Manual.pdf)
+### 3. Playback Utilities State Flow
+This diagram illustrates how the customized playback deck manages linear queue lists, shuffle jumps, and repeat callbacks.
+
+```mermaid
+graph LR
+    SongEnd[Song Ends / Click Next] --> CheckRepeat{Repeat Enabled?}
+    
+    CheckRepeat -- Yes --> PlaySame[Replay Current Song Index]
+    CheckRepeat -- No --> CheckShuffle{Shuffle Enabled?}
+    
+    CheckShuffle -- Yes --> PlayRandom[Generate Random Song Index]
+    CheckShuffle -- No --> PlayNext[Increment to Next Song Index]
+    
+    PlaySame --> Play[Trigger YouTube Iframe Loader]
+    PlayRandom --> Play
+    PlayNext --> Play
+```
 
 ---
 
-## ✍️ Credits
-* **Developer:** Vidit Singh Sisodia
-* **LinkedIn:** [Vidit Singh Sisodia](https://www.linkedin.com/in/viditsinghsisodia/)
-* **GitHub Profile:** [@ss-prateek](https://github.com/ss-prateek)
+## 🌟 Core Features
+
+* **🌌 Liquid Glassmorphic Aesthetic:** Applied to all sidebar cards, headers, and control decks. Uses semi-transparent dark frames (`rgba(15,15,15,0.7)`) and a deep backdrop blur (`backdrop-filter: blur(12px)`) so background elements merge together.
+* **✨ Floating Ambient Background:** Three custom blurred circles float slowly across the viewport using staggered CSS keyframes. When they pass behind cards, they create a moving, liquid-glass distortion.
+* **🔒 Profile Session Persistence:** Automatically checks if a user is logged in. If yes, it bypasses the login card and loads their custom username in the account panel. If not, it completely hides the player grid to display the login screen.
+* **⚡ YouTube Streaming Integration:** Uses the official YouTube IFrame API to stream audio. It hides native YouTube player controls and runs a 500ms Javascript loop to translate active video positions onto a custom seek slider.
+* **📊 Bouncing Neon visualizer:** A custom audio equalizer containing 15 vertical white bars that bounce dynamically when music plays and collapse to a flat, dim baseline when paused.
+* **📱 Responsive Layout Drawer & Stacks:**
+  * **Tablets (under 992px):** Left sidebar slides off-screen (`transform: translateX(-110%)`) and is opened via a header hamburger button. Close button is styled as a circular water droplet.
+  * **Mobile Phones (under 650px):** Layout switches from horizontal columns to a single vertical scrollable column. Text wrapping is suppressed to prevent clashing.
+
+---
+
+## 🛠️ Technology Stack & Libraries
+
+* **Markup Structure:** HTML5
+* **Styling & Animations:** CSS3 (Atomic utilities, custom scrollbars, keyframe trajectories, and glassmorphism styling)
+* **Application Logic:** Vanilla JavaScript ES6
+* **Audio Streaming API:** YouTube IFrame Player API
+* **Database Endpoint:** Google Apps Script Web App (Redirect-safe GET request pipeline)
+* **Credits:** Created by **Vidit Singh Sisodia** (GitHub: [@ss-prateek](https://github.com/ss-prateek))
