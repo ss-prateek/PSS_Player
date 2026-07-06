@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="100%" height="100%">
+    <!-- Outer groove circle (glowing and futuristic) -->
+    <circle cx="25" cy="25" r="22" fill="none" stroke="white" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.45" />
+    
+    <g transform="translate(-4.5, 0)">
+        <!-- Stylized "P" -->
+        <rect x="12" y="14" width="3.5" height="22" rx="1.75" fill="white" />
+        <path d="M 15.5 16 h 5.5 a 4.5 4.5 0 0 1 0 9 h -5.5" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        
+        <!-- Stylized "S" (First) -->
+        <path d="M 32 16 c -3 0 -5 2 -5 5.5 c 0 5 5 3.5 5 9 c 0 3 -2 5.5 -5 5.5" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        
+        <!-- Stylized "S" (Second) -->
+        <path d="M 42 16 c -3 0 -5 2 -5 5.5 c 0 5 5 3.5 5 9 c 0 3 -2 5.5 -5 5.5" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+</svg>
