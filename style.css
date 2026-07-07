@@ -1171,11 +1171,12 @@ body {
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: 15px;
-        left: 20px; /* Position at top-left, clear of all logo cards */
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
+        top: 17px;
+        right: 20px; /* Position at top-right */
+        left: auto !important;
+        width: 42px; /* Rectangular width */
+        height: 32px; /* Rectangular height */
+        border-radius: 8px; /* Rounded rectangle corners */
         z-index: 1100;
         
         /* 1. Liquid transparency & deep blur */
@@ -1189,8 +1190,6 @@ body {
                     0 4px 10px rgba(0, 0, 0, 0.3);
         
         color: white;
-        font-size: 16px; /* Larger font size for the back arrow character */
-        font-weight: bold;
         cursor: pointer;
         transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
