@@ -618,6 +618,8 @@ const librarySearchBtn = document.getElementById("library-search-btn");
 function openSearch() {
     headerSearchBtn.style.display = "none";
     searchContainer.style.display = "flex";
+    const header = document.querySelector(".header");
+    if (header) header.classList.add("search-active");
     searchInput.focus();
 }
 
@@ -627,6 +629,8 @@ function closeSearch() {
     searchInput.value = "";
     searchContainer.style.display = "none";
     headerSearchBtn.style.display = "flex";
+    const header = document.querySelector(".header");
+    if (header) header.classList.remove("search-active");
     renderSongs(); // Redraw full list
 }
 

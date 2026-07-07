@@ -1113,7 +1113,7 @@ body {
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
         
-        padding: 40px 20px 20px 20px !important;
+        padding: 65px 20px 20px 20px !important; /* Increased top padding to leave dedicated space for back arrow */
         box-sizing: border-box !important;
         overflow-y: auto !important;
     }
@@ -1144,13 +1144,35 @@ body {
         display: flex !important;
     }
 
+    /* Hide liked/trending song buttons when search is active inside the header on mobile/tablet */
+    .header.search-active #liked-songs-tab,
+    .header.search-active #trending-songs-tab {
+        display: none !important;
+    }
+
+    /* Make search container fill the full remaining header width when active */
+    .header.search-active #search-container {
+        display: flex !important;
+        flex-grow: 1;
+        width: auto !important;
+        margin-right: 0 !important;
+    }
+
+    /* Allow the search input inside to fill all available width */
+    .header.search-active #search-input {
+        width: 100% !important;
+    }
+
+    /* ========================================================== */
+    /* THE CLOSE BUTTON: Liquid Glass / Back Arrow Design         */
+    /* ========================================================== */
     .left #close-sidebar-btn {
         display: flex !important;
         align-items: center;
         justify-content: center;
         position: absolute;
         top: 15px;
-        right: 15px;
+        left: 20px; /* Position at top-left, clear of all logo cards */
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -1167,7 +1189,7 @@ body {
                     0 4px 10px rgba(0, 0, 0, 0.3);
         
         color: white;
-        font-size: 11px;
+        font-size: 16px; /* Larger font size for the back arrow character */
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
@@ -1181,18 +1203,6 @@ body {
     }
     .left #close-sidebar-btn:active {
         transform: scale(0.95);
-    }
-
-    /* Hover & Active touch feedback styles */
-    .left #close-sidebar-btn:hover {
-        background: rgba(255, 255, 255, 0.22);
-        transform: scale(1.05);
-        /* Slight grow on hover */
-    }
-
-    .left #close-sidebar-btn:active {
-        transform: scale(0.95);
-        /* Slight shrink when clicked/tapped */
     }
 }
 
