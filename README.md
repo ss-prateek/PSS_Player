@@ -2,7 +2,7 @@
 
 PSS Player is a premium, dark-themed music player powered by the **YouTube IFrame API** and styled with modern **liquid glassmorphism design principles**. It features a serverless database backend utilizing **Google Apps Script** to log user logins directly to a Google Sheet.
 
-👉 **[Launch Live Demo](https://ss-prateek.github.io/PSS_Player/)**
+👉 **[Launch Live Demo](https://ss-vidit.github.io/PSS_Player/)**
 
 ---
 
@@ -103,4 +103,4 @@ graph LR
 * **Application Logic:** Vanilla JavaScript ES6
 * **Audio Streaming API:** YouTube IFrame Player API
 * **Database Endpoint:** Google Apps Script Web App (Redirect-safe GET request pipeline)
-* **Credits:** Created by **Vidit Singh Sisodia** (GitHub: [@ss-prateek](https://github.com/ss-prateek))
+* **Credits:** Created by **Vidit Singh Sisodia** (GitHub: [@ss-vidit](https://github.com/ss-vidit))
