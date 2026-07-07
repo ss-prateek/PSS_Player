@@ -1094,18 +1094,40 @@ body {
     /* Slide the Left Sidebar off-screen to the left */
     .left {
         position: fixed;
-        top: 10px;
-        left: 10px;
-        bottom: 10px;
-        width: 250px;
-        z-index: 1000;
-        transform: translateX(-110%);
-        transition: transform 0.3s ease;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important; /* Cover full screen width */
+        height: 100% !important; /* Cover full screen height */
+        z-index: 10000 !important; /* Above everything including header/profile */
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth spring-like slide transition */
+        
+        /* Layout overrides for full screen compatibility */
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        
+        /* Blur background like the login page (allows glowing blobs in body to show through) */
+        background: rgba(10, 10, 10, 0.4) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        
+        padding: 40px 20px 20px 20px !important;
+        box-sizing: border-box !important;
+        overflow-y: auto !important;
     }
 
     /* Slide it into view when active */
     .left.open {
         transform: translateX(0);
+    }
+
+    /* Hide the rest of the player workspace (middle & right columns) when the sidebar is open,
+       ensuring only the floating blobs and the sidebar cards are rendered */
+    .left.open ~ .middle,
+    .left.open ~ .right {
+        display: none !important;
     }
 
     /* Resizing Middle and Right columns */
@@ -1207,8 +1229,8 @@ body {
         padding: 4px 10px !important;   /* Reduces left/right padding to save horizontal space */
     }
 
-    /* 3. Keep the user's library sidebar sliding overlay at a fixed width */
+    /* 3. Overridden to cover full screen width on mobile viewports */
     .left {
-        width: 280px !important;
+        width: 100% !important;
     }
 }
