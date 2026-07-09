@@ -85,12 +85,12 @@ graph LR
 
 ## Core Features
 
-* ** Liquid Glassmorphic Aesthetic:** Applied to all sidebar cards, headers, and control decks. Uses semi-transparent dark frames (`rgba(15,15,15,0.7)`) and a deep backdrop blur (`backdrop-filter: blur(12px)`) so background elements merge together.
-* ** Floating Ambient Background:** Three custom blurred circles float slowly across the viewport using staggered CSS keyframes. When they pass behind cards, they create a moving, liquid-glass distortion.
-* ** Profile Session Persistence:** Automatically checks if a user is logged in. If yes, it bypasses the login card and loads their custom username in the account panel. If not, it completely hides the player grid to display the login screen.
-* ** YouTube Streaming Integration:** Uses the official YouTube IFrame API to stream audio. It hides native YouTube player controls and runs a 500ms Javascript loop to translate active video positions onto a custom seek slider.
-* ** Bouncing Neon visualizer:** A custom audio equalizer containing 15 vertical white bars that bounce dynamically when music plays and collapse to a flat, dim baseline when paused.
-* ** Responsive Layout Drawer & Stacks:**
+* **Liquid Glassmorphic Aesthetic:** Applied to all sidebar cards, headers, and control decks. Uses semi-transparent dark frames (`rgba(15,15,15,0.7)`) and a deep backdrop blur (`backdrop-filter: blur(12px)`) so background elements merge together.
+* **Floating Ambient Background:** Three custom blurred circles float slowly across the viewport using staggered CSS keyframes. When they pass behind cards, they create a moving, liquid-glass distortion.
+* **Profile Session Persistence:** Automatically checks if a user is logged in. If yes, it bypasses the login card and loads their custom username in the account panel. If not, it completely hides the player grid to display the login screen.
+* **YouTube Streaming Integration:** Uses the official YouTube IFrame API to stream audio. It hides native YouTube player controls and runs a 500ms Javascript loop to translate active video positions onto a custom seek slider.
+* **Bouncing Neon visualizer:** A custom audio equalizer containing 15 vertical white bars that bounce dynamically when music plays and collapse to a flat, dim baseline when paused.
+* **Responsive Layout Drawer & Stacks:**
   * **Tablets (under 992px):** Left sidebar slides off-screen (`transform: translateX(-110%)`) and is opened via a header hamburger button. Close button is styled as a circular water droplet.
   * **Mobile Phones (under 650px):** Layout switches from horizontal columns to a single vertical scrollable column. Text wrapping is suppressed to prevent clashing.
 
