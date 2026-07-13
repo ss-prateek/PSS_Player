@@ -24,6 +24,8 @@
     align-items: center;
 }
 
+/* Frosted Glassmorphism: rgba(15,15,15,0.7) sets 70% dark transparency, 
+   while backdrop-filter blurs the underlying canvas pixels by 12px dynamically. */
 .bg-ele  {
     background-color: rgba(15, 15, 15, 0.7);
     backdrop-filter: blur(12px);
@@ -717,6 +719,10 @@ body  {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
 }
 
+/* Visualizer Bouncing Math: 
+   nth-child divides bars into separate animation tracks (e.g., 3n+1 selects 1st, 4th, 7th...) 
+   so different columns bounce at different speeds/heights. 
+   animation-delay offsets the start times (like a stadium crowd wave) to look organic instead of a solid block. */
 .visualizer-container.playing .bar:nth-child(3n+1)  {
     animation: bounceA 0.75s ease-in-out infinite alternate;
 }
@@ -733,7 +739,6 @@ body  {
     animation: bounceD 0.65s ease-in-out infinite alternate;
 }
 
-/* Add slight delay offsets to make the waveform look organic and flowing */
 .visualizer-container.playing .bar:nth-child(even)  {
     animation-delay: 0.15s;
 }
@@ -867,12 +872,13 @@ body  {
     transform: translateX(0);
 }
 
-    /* Hide the rest of the player workspace (middle & right columns) when the sidebar is open,
-       ensuring only the floating blobs and the sidebar cards are rendered */
+    /* CSS Sibling Isolation: The general sibling combinator (~) detects if .left has the class .open. 
+       If yes, it immediately hides the sibling columns (.middle and .right) so the background blobs 
+       can bleed through the transparent sidebar cleanly without overlapping song cards. */
     .left.open ~ .middle,
     .left.open ~ .right  {
-    display: none !important;
-}
+        display: none !important;
+    }
 
     /* Resizing Middle and Right columns */
     .middle  {

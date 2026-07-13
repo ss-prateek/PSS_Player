@@ -183,7 +183,9 @@ function setupLoginListeners() {
                 }, 500); 
             }
 
-            // Fire webhook logging GET request to Apps Script using mode: 'no-cors'
+            // Webhook Login Logger: encodeURIComponent converts characters like spaces and @ into URL-safe hex codes.
+            // mode: 'no-cors' tells the browser to deliver the package one-way without waiting for responses,
+            // which cleanly bypasses sandbox cross-origin (CORS) blocks on external scripts.
             if (GOOGLE_SHEET_API_URL !== "") {
                 const url = `${GOOGLE_SHEET_API_URL}?name=${encodeURIComponent(nameVal)}&email=${encodeURIComponent(emailVal)}`;
                 fetch(url, {
@@ -286,12 +288,14 @@ function renderSongs() {
 }
 renderSongs();
 
-// Handles song card playing, liked toggles, and tab switches
+// Event Delegation Pattern: Instead of attaching 8 individual event listeners to 8 card elements
+// (which wastes memory and breaks if songs reload), we attach a single listener to the parent container.
+// e.target.closest() travels up the DOM tree to locate the clicked cell class (.like or .card) dynamically.
 if (DOM.songListContainer) {
     DOM.songListContainer.addEventListener("click", (e) => {
         const heartBtn = e.target.closest(".like");
         if (heartBtn) {
-            e.stopPropagation(); 
+            e.stopPropagation(); // Stops the click event from bubbling up and starting the song
             const ytid = heartBtn.getAttribute("data-youtube-id");
             toggleLikeSong(ytid);
             return;
@@ -432,6 +436,8 @@ if (DOM.pauseBtn) {
     });
 }
 
+// Queue Navigation: Math.random() generates decimal indices which are rounded down by Math.floor().
+// Modulo (%) loops the index back to 0 when it exceeds playlist length, avoiding index-out-of-bounds.
 if (DOM.nextBtn) {
     DOM.nextBtn.addEventListener("click", () => {
         if (isShuffle && songDatabase.length > 1) {
@@ -463,6 +469,8 @@ if (DOM.prevBtn) {
 }
 
 // Seek Slider progress tracking loop (checks every 500ms)
+// Timeline Progress: startProgressBarTrack runs a 500ms query loop fetching current seconds 
+// and total duration from the YouTube IFrame API to calculate the slider progress percentage: (current / total) * 100.
 function startProgressBarTrack() {
     clearInterval(progressInterval);
     progressInterval = setInterval(() => {
@@ -476,7 +484,8 @@ function startProgressBarTrack() {
     }, 500);
 }
 
-// Seeks back or forth in time when user drags the progress bar slider range
+// Timeline Seeking: Translates our input range slider's drag position (percentage) back into target seconds, 
+// and commands the YouTube API to jump playback directly to that second point.
 if (DOM.seekSlider) {
     DOM.seekSlider.addEventListener("input", () => {
         if (player && typeof player.seekTo === "function") {
