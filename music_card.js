@@ -1,4 +1,6 @@
-// 1. DATA DATABASE: A list of song objects. Each object stores information about a single track.
+// ==========================================================================
+// PART 1: SONG DATABASE STORE
+// ==========================================================================
 const songDatabase = [
     {
         title: "On & On",
@@ -59,133 +61,134 @@ const songDatabase = [
 ];
 
 // ==========================================================================
-// 2. STATE MANAGER: Set up current tabs state and liked songs persistence
+// PART 2: GLOBAL STATE VARIABLES & LOCAL STORAGE LOADER
 // ==========================================================================
-
-let activeTab = "trending"; // Can be "trending" or "liked"
-let likedSongs = JSON.parse(localStorage.getItem("likedSongs")) || []; // Load liked songs from localStorage
-let searchQuery = ""; // Global tracker for search input queries
-// --- SHUFFLE & REPEAT SETTINGS ---
-// Load if Shuffle and Repeat are turned on or off from the browser's memory (localStorage)
+let activeTab = "trending"; 
+let likedSongs = JSON.parse(localStorage.getItem("likedSongs")) || []; 
+let searchQuery = ""; 
 let isShuffle = JSON.parse(localStorage.getItem("isShuffle")) || false; 
 let isRepeat = JSON.parse(localStorage.getItem("isRepeat")) || false; 
 
-// --- GOOGLE SHEETS / DATA LOGGING INTEGRATION ---
-// This is your Google Sheet API connection link. When someone enters their name and email,
-// this URL acts as a receiver and automatically writes a new row inside your Google Sheet!
+// Google Sheets logger URL to log user login history
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxxfyuCTRZXl8mRo4pbdub1iklUmbO6mC9cjx0h1DeBS1ISA56MWOwQ8uqWV8fUFMdQ8g/exec"; 
 
-// --- INITIALIZE BUTTON COLOR STYLES ---
-// When the page first loads, this function checks if Shuffle or Repeat was left "ON" in the browser's memory.
-// If it was "ON", it colors the button solid white with a glowing shadow so it looks active.
-function initializeUtilityStates() {
-    const shuffleBtn = document.getElementById("shuffle-btn");
-    const repeatBtn = document.getElementById("repeat-btn");
-    if (shuffleBtn) {
-        shuffleBtn.style.color = isShuffle ? "white" : "#b3b3b3";
-        shuffleBtn.style.textShadow = isShuffle ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
-    }
-    if (repeatBtn) {
-        repeatBtn.style.color = isRepeat ? "white" : "#b3b3b3";
-        repeatBtn.style.textShadow = isRepeat ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
-    }
-}
-// Run the styling check slightly after the page loads to make sure the HTML is fully ready
-setTimeout(initializeUtilityStates, 50); 
+// ==========================================================================
+// PART 3: DOM ELEMENTS REGISTRY
+// ==========================================================================
+const DOM = {
+    // Containers
+    container: document.querySelector(".container"),
+    loginOverlay: document.getElementById("login-overlay"),
+    songListContainer: document.getElementById("song-list-container"),
+    recentlyPlayedList: document.getElementById("recently-played-list"),
+    leftSidebar: document.querySelector(".left"),
+    visualizer: document.getElementById("visualizer-container"),
+    header: document.querySelector(".header"),
+    
+    // Auth inputs/messages
+    loginName: document.getElementById("login-name"),
+    loginEmail: document.getElementById("login-email"),
+    loginError: document.getElementById("login-error"),
+    userNameDisplay: document.getElementById("user-name-display"),
+    
+    // Auth & Navigation buttons
+    loginSubmitBtn: document.getElementById("login-submit-btn"),
+    logoutBtn: document.getElementById("logout-btn"),
+    likedSongsTab: document.getElementById("liked-songs-tab"),
+    trendingSongsTab: document.getElementById("trending-songs-tab"),
+    
+    // Search elements
+    searchInput: document.getElementById("search-input"),
+    searchContainer: document.getElementById("search-container"),
+    headerSearchBtn: document.getElementById("header-search-btn"),
+    searchCloseBtn: document.getElementById("search-close-btn"),
+    librarySearchBtn: document.getElementById("library-search-btn"),
+    
+    // Playback control buttons
+    playBtn: document.getElementById("play-btn"),
+    pauseBtn: document.getElementById("pause-btn"),
+    prevBtn: document.getElementById("prev-btn"),
+    nextBtn: document.getElementById("next-btn"),
+    shuffleBtn: document.getElementById("shuffle-btn"),
+    repeatBtn: document.getElementById("repeat-btn"),
+    surpriseBtn: document.getElementById("surprise-btn"),
+    videoOverlay: document.getElementById("video-overlay"),
+    
+    // Sliders
+    seekSlider: document.getElementById("seek-slider"),
+    
+    // Active track display fields
+    currentSongTitle: document.getElementById("current-song-title"),
+    currentSongArtist: document.getElementById("current-song-artist"),
+    
+    // Responsive controllers
+    hamburgerBtn: document.getElementById("hamburger-btn"),
+    closeSidebarBtn: document.getElementById("close-sidebar-btn")
+};
 
-// --- LOGIN FLOW SYSTEM ---
-// This function controls if the user sees the Login Card or the Music Player.
-// It checks the browser's memory (localStorage) for a saved name and email.
+// ==========================================================================
+// PART 4: LOGIN & LOGOUT OPERATIONS
+// ==========================================================================
+
+// Checks if the user session exists on startup to toggle Login Card vs Player Workspace
 function checkLoginState() {
-    const overlay = document.getElementById("login-overlay");
-    const nameDisplay = document.getElementById("user-name-display");
     const userProfile = JSON.parse(localStorage.getItem("userProfile"));
-    const container = document.querySelector(".container");
 
     if (userProfile && userProfile.name) {
-        // CASE A: User is already logged in!
-        // 1. Hide the login form overlay
-        if (overlay) {
-            overlay.style.display = "none";
-            overlay.style.opacity = "0";
-            overlay.style.visibility = "hidden";
+        if (DOM.loginOverlay) {
+            DOM.loginOverlay.style.display = "none";
+            DOM.loginOverlay.style.opacity = "0";
+            DOM.loginOverlay.style.visibility = "hidden";
         }
-        // 2. Put their saved name inside the top-right profile slot
-        if (nameDisplay) {
-            nameDisplay.innerText = userProfile.name;
-        }
-        // 3. Reveal the main music player workspace
-        if (container) {
-            container.style.display = "flex"; 
-        }
+        if (DOM.userNameDisplay) DOM.userNameDisplay.innerText = userProfile.name;
+        if (DOM.container) DOM.container.style.display = "flex"; 
     } else {
-        // CASE B: User is NOT logged in yet!
-        // 1. Keep the login overlay form visible
-        if (overlay) {
-            overlay.style.display = "flex";
-        }
-        // 2. Hide the music player container so it doesn't show behind the login card
-        if (container) {
-            container.style.display = "none"; 
-        }
+        if (DOM.loginOverlay) DOM.loginOverlay.style.display = "flex";
+        if (DOM.container) DOM.container.style.display = "none"; 
     }
 }
-// Check the login state shortly after page loads
+
+// Initial session verification runs shortly after page startup
 setTimeout(checkLoginState, 20); 
 
-// --- SETUP LOGIN & LOGOUT INTERACTIONS ---
-// This function attaches actions to the Submit and Log Out buttons.
+// Attaches actions to auth inputs (Verify email pattern, submit to webhook, logout session)
 function setupLoginListeners() {
-    const submitBtn = document.getElementById("login-submit-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-    const errorMsg = document.getElementById("login-error");
+    if (DOM.loginSubmitBtn) {
+        DOM.loginSubmitBtn.addEventListener("click", () => {
+            const nameVal = DOM.loginName.value.trim();
+            const emailVal = DOM.loginEmail.value.trim();
 
-    // Click handler for the login form's "Enter Player" submit button
-    if (submitBtn) {
-        submitBtn.addEventListener("click", () => {
-            // Get the name and email values entered in the inputs
-            const nameVal = document.getElementById("login-name").value.trim();
-            const emailVal = document.getElementById("login-email").value.trim();
-
-            // Check if name is blank, and test if email fits a standard email format (name@site.com)
+            // Match regular expression to check standard email formatting (name@domain.com)
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (nameVal === "" || !emailRegex.test(emailVal)) {
-                // If invalid: show the red error text and stop
-                if (errorMsg) errorMsg.style.display = "block";
+                if (DOM.loginError) DOM.loginError.style.display = "block";
                 return;
             }
 
-            // If valid: hide the red error text
-            if (errorMsg) errorMsg.style.display = "none";
+            if (DOM.loginError) DOM.loginError.style.display = "none";
 
-            // Create a user profile profile and save it in browser memory so they stay logged in
+            // Save session profile locally to bypass logins on returning visits
             const profile = { name: nameVal, email: emailVal, timestamp: new Date().toISOString() };
             localStorage.setItem("userProfile", JSON.stringify(profile));
 
-            // Set the top-right account text to the user's name
-            const nameDisplay = document.getElementById("user-name-display");
-            if (nameDisplay) nameDisplay.innerText = nameVal;
+            if (DOM.userNameDisplay) DOM.userNameDisplay.innerText = nameVal;
+            if (DOM.container) DOM.container.style.display = "flex";
 
-            // Make the main music player container visible so it starts fading in
-            const container = document.querySelector(".container");
-            if (container) container.style.display = "flex";
-
-            // Smoothly fade out the black login overlay page
-            const overlay = document.getElementById("login-overlay");
-            if (overlay) {
-                overlay.style.opacity = "0";
+            // Smoothly animate out login card overlay
+            if (DOM.loginOverlay) {
+                DOM.loginOverlay.style.opacity = "0";
                 setTimeout(() => {
-                    overlay.style.display = "none";
-                    overlay.style.visibility = "hidden";
-                }, 500); // Wait 0.5s for the CSS fade-out animation to complete
+                    DOM.loginOverlay.style.display = "none";
+                    DOM.loginOverlay.style.visibility = "hidden";
+                }, 500); 
             }
 
-            // If your Google Sheet link is set, send a background request to record this login!
+            // Fire webhook logging GET request to Apps Script using mode: 'no-cors'
             if (GOOGLE_SHEET_API_URL !== "") {
                 const url = `${GOOGLE_SHEET_API_URL}?name=${encodeURIComponent(nameVal)}&email=${encodeURIComponent(emailVal)}`;
                 fetch(url, {
                     method: "GET",
-                    mode: "no-cors" // no-cors bypasses cross-origin blocks when sending data to Google Sheets
+                    mode: "no-cors"
                 })
                 .then(() => console.log("Login details successfully sent to Google Sheets."))
                 .catch(err => console.error("Error logging to Google Sheets:", err));
@@ -193,38 +196,46 @@ function setupLoginListeners() {
         });
     }
 
-    // Click handler for the "Log Out" button
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            // Delete the saved user session from browser memory
+    if (DOM.logoutBtn) {
+        DOM.logoutBtn.addEventListener("click", () => {
             localStorage.removeItem("userProfile");
-            // Reload the page, which automatically forces the login screen to reappear!
             location.reload(); 
         });
     }
 }
-// Set up these submit and logout click triggers on page load
 setTimeout(setupLoginListeners, 50);
 
+// Initialize visual buttons (Shuffle, Repeat) active color/glow if saved in browser storage
+function initializeUtilityStates() {
+    if (DOM.shuffleBtn) {
+        DOM.shuffleBtn.style.color = isShuffle ? "white" : "#b3b3b3";
+        DOM.shuffleBtn.style.textShadow = isShuffle ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
+    }
+    if (DOM.repeatBtn) {
+        DOM.repeatBtn.style.color = isRepeat ? "white" : "#b3b3b3";
+        DOM.repeatBtn.style.textShadow = isRepeat ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
+    }
+}
+setTimeout(initializeUtilityStates, 50);
+
 // ==========================================================================
-// 3. CARD GENERATOR & RENDERER: Dynamically draws song lists based on the active tab
+// PART 5: DYNAMIC TAB RENDERER & SEARCH FILTER ENGINE
 // ==========================================================================
 
+// Iterates the song database, filters by active tab and search query, and creates HTML cards
 function renderSongs() {
-    const targetContainer = document.querySelector("#song-list-container");
-    if (!targetContainer) return;
+    if (!DOM.songListContainer) return;
+    DOM.songListContainer.innerHTML = ""; 
     
-    targetContainer.innerHTML = ""; // Clear current list of cards
-    
-    let renderedCount = 0; // Track if we rendered any songs
+    let renderedCount = 0; 
     
     songDatabase.forEach((song, index) => {
         const isLiked = likedSongs.includes(song.youtubeId);
         
-        // If we are on the "Liked songs" tab and this song is not liked, skip drawing it!
+        // Skip songs if on Liked Songs tab and the song is not liked
         if (activeTab === "liked" && !isLiked) return;
         
-        // Filter by search query if text is typed
+        // Skip songs if search query doesn't match song title or artist
         if (searchQuery !== "") {
             const titleMatch = song.title.toLowerCase().includes(searchQuery.toLowerCase());
             const artistMatch = song.artist.toLowerCase().includes(searchQuery.toLowerCase());
@@ -233,7 +244,6 @@ function renderSongs() {
         
         renderedCount++;
         
-        // Use a filled red heart for liked songs and an empty heart for unliked songs
         const heartSymbol = isLiked ? "♥" : "♡";
         const likedClass = isLiked ? "liked-active" : "";
         
@@ -248,25 +258,24 @@ function renderSongs() {
                     <p>${song.artist}</p>
                 </div>
                 <div>
-                    <!-- Heart button tagged with the song's YouTube ID -->
                     <button class="like ${likedClass}" data-youtube-id="${song.youtubeId}">${heartSymbol}</button>
                 </div>
             </div>`;
         
-        targetContainer.innerHTML += html;
+        DOM.songListContainer.innerHTML += html;
     });
     
-    // Empty state fallback for Liked Songs or No search results found
+    // Empty state displays
     if (renderedCount === 0) {
         if (activeTab === "liked" && searchQuery === "") {
-            targetContainer.innerHTML = `
+            DOM.songListContainer.innerHTML = `
                 <div style="text-align: center; color: #b3b3b3; padding: 40px 20px; font-weight: normal;">
                     <p style="font-size: 24px; margin-bottom: 10px;">♥</p>
                     <p style="font-size: 16px;">No liked songs yet.</p>
                     <p style="font-size: 12px; margin-top: 5px;">Click the heart icon on any song to save it here!</p>
                 </div>`;
         } else if (searchQuery !== "") {
-            targetContainer.innerHTML = `
+            DOM.songListContainer.innerHTML = `
                 <div style="text-align: center; color: #b3b3b3; padding: 40px 20px; font-weight: normal;">
                     <p style="font-size: 24px; margin-bottom: 10px;">🔍</p>
                     <p style="font-size: 16px;">No results found for "${searchQuery}"</p>
@@ -275,408 +284,241 @@ function renderSongs() {
         }
     }
 }
-
-// Initial draw of our songs on page boot
 renderSongs();
 
-// ==========================================================================
-// 4. CLICK HANDLERS: Handles song card playing, liked toggles, and tab switches
-// ==========================================================================
-
-// Click listener on the middle song card list
-document.querySelector("#song-list-container").addEventListener("click", (e) => {
-    // 1. Check if the user clicked on the Like heart button
-    const heartBtn = e.target.closest(".like");
-    if (heartBtn) {
-        e.stopPropagation(); // Stops playSong from firing!
-        const ytid = heartBtn.getAttribute("data-youtube-id");
-        toggleLikeSong(ytid);
-        return;
-    }
-    
-    // 2. Otherwise, check if they clicked on the card itself to start playback
-    const card = e.target.closest(".card");
-    if (card) {
-        const index = parseInt(card.getAttribute("data-index"));
-        playSong(index);
-    }
-});
-
-// Toggles liked state for a song and saves updates to local storage
-function toggleLikeSong(ytid) {
-    if (likedSongs.includes(ytid)) {
-        // Remove song from liked array (unlike)
-        likedSongs = likedSongs.filter(id => id !== ytid);
-    } else {
-        // Add song to liked array (like)
-        likedSongs.push(ytid);
-    }
-    
-    // Save the array back to local storage
-    localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
-    
-    // Redraw the list of songs immediately to reflect changes
-    renderSongs();
-}
-
-// Tab click listeners controlling header navigation switches
-const likedTab = document.getElementById("liked-songs-tab");
-const trendingTab = document.getElementById("trending-songs-tab");
-
-likedTab.addEventListener("click", () => {
-    activeTab = "liked";
-    likedTab.style.color = "white";       // Make active tab text white/bright
-    trendingTab.style.color = "#b3b3b3";   // Fade inactive tab text
-    renderSongs();                        // Redraw list to show only liked songs
-});
-
-trendingTab.addEventListener("click", () => {
-    activeTab = "trending";
-    trendingTab.style.color = "white";    // Make active tab text white/bright
-    likedTab.style.color = "#b3b3b3";     // Fade inactive tab text
-    renderSongs();                        // Redraw list to show all database songs
-});
-
-//______________________________________________________________________________________________________________________________________________________________________
-
-// 5. PLAYER VARIABLES: Setup variables to store player instances, indexes, and timers
-let player;                  // Will hold our YouTube video player controller
-let currentSongIndex = 0;    // Keeps track of the index of the song playing right now
-let isPlaying = false;       // Set to true if a song is playing, and false if paused
-let progressInterval;        // Stores the timer loop that moves the timeline slider
-
-// 6. INITIALIZE PLAYER: Automatically called when the YouTube IFrame API script loads
-function onYouTubeIframeAPIReady() {
-    // Creates the YouTube player inside the 'yt-player' div in index.html
-    player = new YT.Player('yt-player', {
-        height: '130',                      // Set height to match standard widescreen 16:9 aspect ratio
-        width: '220',                       // Set width to match right-sidebar display styling
-        videoId: songDatabase[0].youtubeId,  // Set J-Lo as the first song loaded on boot
-        playerVars: {
-            'controls': 0,                  // HIDE YOUTUBE'S NATIVE CONTROLS (removes progress bar, play overlays, sound indicators)
-            'disablekb': 1,                 // Disable keyboard controls on the video iframe
-            'modestbranding': 1,            // Remove the YouTube logo footprint from the interface
-            'rel': 0                        // Prevent showing recommended videos when a track ends
-        },
-        events: {
-            'onStateChange': onPlayerStateChange // Assign function to run when video state changes (e.g. song ends)
+// Handles song card playing, liked toggles, and tab switches
+if (DOM.songListContainer) {
+    DOM.songListContainer.addEventListener("click", (e) => {
+        const heartBtn = e.target.closest(".like");
+        if (heartBtn) {
+            e.stopPropagation(); 
+            const ytid = heartBtn.getAttribute("data-youtube-id");
+            toggleLikeSong(ytid);
+            return;
+        }
+        
+        const card = e.target.closest(".card");
+        if (card) {
+            const index = parseInt(card.getAttribute("data-index"));
+            playSong(index);
         }
     });
 }
 
-//______________________________________________________________________________________________________________________________________________________________________
+function toggleLikeSong(ytid) {
+    if (likedSongs.includes(ytid)) {
+        likedSongs = likedSongs.filter(id => id !== ytid);
+    } else {
+        likedSongs.push(ytid);
+    }
+    localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
+    renderSongs();
+}
 
-// 7. AUTO-SKIP ON END: Automatically skip to the next track when the active video ends
+if (DOM.likedSongsTab) {
+    DOM.likedSongsTab.addEventListener("click", () => {
+        activeTab = "liked";
+        DOM.likedSongsTab.style.color = "white";       
+        DOM.trendingSongsTab.style.color = "#b3b3b3";   
+        renderSongs();                        
+    });
+}
+
+if (DOM.trendingSongsTab) {
+    DOM.trendingSongsTab.addEventListener("click", () => {
+        activeTab = "trending";
+        DOM.trendingSongsTab.style.color = "white";    
+        DOM.likedSongsTab.style.color = "#b3b3b3";     
+        renderSongs();                        
+    });
+}
+
+// ==========================================================================
+// PART 6: YOUTUBE IFRAME API CORE LOADER & EVENT HANDLERS
+// ==========================================================================
+let player;                  
+let currentSongIndex = 0;    
+let isPlaying = false;       
+let progressInterval;        
+
+// Callback function triggered automatically by the YouTube API script loading
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('yt-player', {
+        height: '130',                      
+        width: '220',                       
+        videoId: songDatabase[0].youtubeId,  
+        playerVars: {
+            'controls': 0,                  // Hide standard player timeline and controls bar
+            'disablekb': 1,                 // Block iframe focus keyboard hotkeys
+            'modestbranding': 1,            // Remove YouTube layout watermark logo
+            'rel': 0                        // Block related videos at the end
+        },
+        events: {
+            'onStateChange': onPlayerStateChange 
+        }
+    });
+}
+
+// Handler that triggers when video states change (e.g. tracks end)
 function onPlayerStateChange(event) {
-    // YT.PlayerState.ENDED is fired when a song finishes
     if (event.data === YT.PlayerState.ENDED) {
         if (isRepeat) {
-            playSong(currentSongIndex); // Replay current song
+            playSong(currentSongIndex); 
         } else {
-            // Trigger a click on the next track button to play the next song
-            document.getElementById("next-btn").click();
+            if (DOM.nextBtn) DOM.nextBtn.click();
         }
     }
 }
 
-// 8. PRIMARY PLAYBACK LOADER: Loads and starts playing a song from our database
+// Primary play function: loads song, updates metadata display cards, and calls YouTube stream API
 function playSong(index) {
-    // Save the new song index as the current active track
     currentSongIndex = index;
-    // Get the song data matching this index number
     const song = songDatabase[index];
 
-    // Update currently playing song display text under the visualizer
-    const currentTitleEl = document.getElementById("current-song-title");
-    const currentArtistEl = document.getElementById("current-song-artist");
-    if (currentTitleEl) currentTitleEl.innerText = song.title;
-    if (currentArtistEl) currentArtistEl.innerText = song.artist;
+    if (DOM.currentSongTitle) DOM.currentSongTitle.innerText = song.title;
+    if (DOM.currentSongArtist) DOM.currentSongArtist.innerText = song.artist;
 
-    // Safety check: Exit if the YouTube player has not initialized yet
     if (!player || typeof player.loadVideoById !== "function") return;
 
-    // Load the video ID in the right sidebar iframe and start playing it
     player.loadVideoById(song.youtubeId);
-    isPlaying = true; // Mark as playing
+    isPlaying = true; 
+    
     updateVisualizerState();
 
-    // Swap control icons: Hide the Play button, show the Pause button
-    document.getElementById("play-btn").style.display = "none";
-    document.getElementById("pause-btn").style.display = "flex";
+    if (DOM.playBtn) DOM.playBtn.style.display = "none";
+    if (DOM.pauseBtn) DOM.pauseBtn.style.display = "flex";
 
-    // Start the timer to move the seek slider as the song progress updates
     startProgressBarTrack();
-
-    // Add the played song to the recently played list and redraw the sidebar UI
     addToRecentlyPlayed(song);
 }
 
-// Helper to update the visualizer animation state based on playback
+// Toggles visualizer keyframe bounces based on playback state
 function updateVisualizerState() {
-    const visualizer = document.getElementById("visualizer-container");
-    if (!visualizer) return;
+    if (!DOM.visualizer) return;
     if (isPlaying) {
-        visualizer.classList.add("playing");
+        DOM.visualizer.classList.add("playing");
     } else {
-        visualizer.classList.remove("playing");
+        DOM.visualizer.classList.remove("playing");
     }
 }
 
-//______________________________________________________________________________________________________________________________________________________________________
+// ==========================================================================
+// PART 7: PLAYER CONTROL DECK OPERATIONS
+// ==========================================================================
 
-// 9. BUTTON CONTROLS: Find the play/pause buttons and assign their click actions
-const playBtn = document.getElementById("play-btn");
-const pauseBtn = document.getElementById("pause-btn");
-
-// Play Button: Resumes playback
-playBtn.addEventListener("click", () => {
-    // Check if player is ready
-    if (player && typeof player.playVideo === "function") {
-        player.playVideo();                 // Tell YouTube to resume playing
-        isPlaying = true;                   // Mark state as playing
-        updateVisualizerState();
-        playBtn.style.display = "none";     // Hide Play button
-        pauseBtn.style.display = "flex";    // Show Pause button
-        startProgressBarTrack();            // Resume progress bar updates
-    }
-});
-
-// Pause Button: Pauses playback
-pauseBtn.addEventListener("click", () => {
-    // Check if player is ready
-    if (player && typeof player.pauseVideo === "function") {
-        player.pauseVideo();                 // Tell YouTube to pause
-        isPlaying = false;                  // Mark state as paused
-        updateVisualizerState();
-        playBtn.style.display = "flex";     // Show Play button
-        pauseBtn.style.display = "none";    // Hide Pause button
-        clearInterval(progressInterval);    // Turn off the timer loop to save browser memory
-    }
-});
-
-//______________________________________________________________________________________________________________________________________________________________________
-
-// 10. SKIP NAVIGATION: Bind actions to Next and Previous skip buttons
-// Next Button click handler (respects Shuffle mode)
-document.getElementById("next-btn").addEventListener("click", () => {
-    if (isShuffle && songDatabase.length > 1) {
-        let randomIndex = Math.floor(Math.random() * songDatabase.length);
-        while (randomIndex === currentSongIndex) {
-            randomIndex = Math.floor(Math.random() * songDatabase.length);
+if (DOM.playBtn) {
+    DOM.playBtn.addEventListener("click", () => {
+        if (player && typeof player.playVideo === "function") {
+            player.playVideo();                 
+            isPlaying = true;                   
+            updateVisualizerState();
+            DOM.playBtn.style.display = "none";     
+            DOM.pauseBtn.style.display = "flex";    
+            startProgressBarTrack();            
         }
-        playSong(randomIndex);
-    } else {
-        // Move to the next index
-        let nextIndex = currentSongIndex + 1;
-        // If we pass the last song in our list, circle back to the first song (index 0)
-        if (nextIndex >= songDatabase.length) nextIndex = 0;
-        playSong(nextIndex);
-    }
-});
+    });
+}
 
-// Previous Button click handler (respects Shuffle mode)
-document.getElementById("prev-btn").addEventListener("click", () => {
-    if (isShuffle && songDatabase.length > 1) {
-        let randomIndex = Math.floor(Math.random() * songDatabase.length);
-        while (randomIndex === currentSongIndex) {
-            randomIndex = Math.floor(Math.random() * songDatabase.length);
+if (DOM.pauseBtn) {
+    DOM.pauseBtn.addEventListener("click", () => {
+        if (player && typeof player.pauseVideo === "function") {
+            player.pauseVideo();                 
+            isPlaying = false;                  
+            updateVisualizerState();
+            DOM.playBtn.style.display = "flex";     
+            DOM.pauseBtn.style.display = "none";    
+            clearInterval(progressInterval);    
         }
-        playSong(randomIndex);
-    } else {
-        // Move to the previous index
-        let prevIndex = currentSongIndex - 1;
-        // If we go below the first song, wrap around to the last song in the database
-        if (prevIndex < 0) prevIndex = songDatabase.length - 1;
-        playSong(prevIndex);
-    }
-});
+    });
+}
 
-//______________________________________________________________________________________________________________________________________________________________________
+if (DOM.nextBtn) {
+    DOM.nextBtn.addEventListener("click", () => {
+        if (isShuffle && songDatabase.length > 1) {
+            let randomIndex = Math.floor(Math.random() * songDatabase.length);
+            while (randomIndex === currentSongIndex) {
+                randomIndex = Math.floor(Math.random() * songDatabase.length);
+            }
+            playSong(randomIndex);
+        } else {
+            let nextIndex = (currentSongIndex + 1) % songDatabase.length;
+            playSong(nextIndex);
+        }
+    });
+}
 
-// 11. TIMELINE PROGRESS TRACKER: Moves the range slider as the music plays
-const seekSlider = document.getElementById("seek-slider");
+if (DOM.prevBtn) {
+    DOM.prevBtn.addEventListener("click", () => {
+        if (isShuffle && songDatabase.length > 1) {
+            let randomIndex = Math.floor(Math.random() * songDatabase.length);
+            while (randomIndex === currentSongIndex) {
+                randomIndex = Math.floor(Math.random() * songDatabase.length);
+            }
+            playSong(randomIndex);
+        } else {
+            let prevIndex = (currentSongIndex - 1 + songDatabase.length) % songDatabase.length;
+            playSong(prevIndex);
+        }
+    });
+}
 
+// Seek Slider progress tracking loop (checks every 500ms)
 function startProgressBarTrack() {
-    // Clear any active timer first to avoid multiple clocks running at the same time
     clearInterval(progressInterval);
-    
-    // Set a recurring timer to check time every 500 milliseconds (half a second)
     progressInterval = setInterval(() => {
-        // Only run if the player is active, playing, and has the API functions ready
         if (player && isPlaying && typeof player.getCurrentTime === "function") {
-            const currentTime = player.getCurrentTime(); // Elapsed time in seconds
-            const duration = player.getDuration();       // Total video length in seconds
-            
-            // Avoid division error if duration isn't loaded yet
-            if (duration > 0) {
-                // Calculate percentage of track played and update the slider position
-                seekSlider.value = (currentTime / duration) * 100;
+            const currentTime = player.getCurrentTime(); 
+            const duration = player.getDuration();       
+            if (duration > 0 && DOM.seekSlider) {
+                DOM.seekSlider.value = (currentTime / duration) * 100;
             }
         }
     }, 500);
 }
 
-// 12. TIMELINE SEEK CONTROLLER: Seek to a different part of the song when user drags the slider
-seekSlider.addEventListener("input", () => {
-    // Only run if player is active and has the seek function ready
-    if (player && typeof player.seekTo === "function") {
-        const duration = player.getDuration(); // Get total video duration
-        // Translate slider percentage back to target seconds (e.g. 50% slider value = half the song duration)
-        const seekToSeconds = (seekSlider.value / 100) * duration;
-        // Command YouTube to skip to that second immediately
-        player.seekTo(seekToSeconds, true);
-    }
-});
-
-// 13. OVERLAY CLICK CONTROLLER: Trigger play/pause toggles when clicking anywhere on the cover art player box
-document.getElementById("video-overlay").addEventListener("click", () => {
-    // If a song is currently playing, click the Pause button. Otherwise, click the Play button.
-    if (isPlaying) {
-        pauseBtn.click();
-    } else {
-        playBtn.click();
-    }
-});
-
-//______________________________________________________________________________________________________________________________________________________________________
-
-// ==========================================================================
-// 14. RECENTLY PLAYED TRACK STORAGE & RENDERING CONTROLLERS
-// ==========================================================================
-
-let recentlyPlayed = []; // Global array holding recently played track objects
-
-// Adds a song to the history storage array, ensuring no duplicates, and updates the list display
-function addToRecentlyPlayed(song) {
-    // Filter out this song if it is already in the list to avoid duplicate entries
-    recentlyPlayed = recentlyPlayed.filter(item => item.youtubeId !== song.youtubeId);
-    
-    // Add the song to the absolute front (index 0) of the list
-    recentlyPlayed.unshift(song);
-    
-    // Limit our history list to a maximum of 6 songs to preserve sidebar height spacing
-    if (recentlyPlayed.length > 6) {
-        recentlyPlayed.pop();
-    }
-    
-    // Redraw the left sidebar list with the updated entries
-    updateRecentlyPlayedUI();
-}
-
-// Redraws the left sidebar playlist column with the recently played songs dynamically
-function updateRecentlyPlayedUI() {
-    const listContainer = document.getElementById("recently-played-list");
-    if (!listContainer) return;
-    
-    // Clear the current list
-    listContainer.innerHTML = "";
-    
-    // Draw each played song cell into the sidebar
-    recentlyPlayed.forEach(song => {
-        let li = document.createElement("li");
-        // Set the custom data attribute to identify the video on click events
-        li.setAttribute("data-youtube-id", song.youtubeId);
-        
-        li.innerHTML = `
-            <img src="${song.thumbnail}" alt="${song.title} Cover Art">
-            <div style="display: flex; flex-direction: column; gap: 2px;">
-                <span style="font-size: 14px; color: white; font-weight: bold; line-height: 1.2;">${song.title}</span>
-                <span style="font-size: 11px; color: #b3b3b3; font-weight: normal; line-height: 1.2;">${song.artist}</span>
-            </div>
-        `;
-        listContainer.appendChild(li);
-    });
-}
-
-// Click Listener for Recently Played List: Click sidebar song to play it immediately
-document.getElementById("recently-played-list").addEventListener("click", (e) => {
-    const item = e.target.closest("li");
-    if (item) {
-        const ytid = item.getAttribute("data-youtube-id");
-        // Check if it's the placeholder (which has no data-youtube-id attribute)
-        if (!ytid) return;
-        
-        // Search our song database for the index matching this YouTube video ID
-        const index = songDatabase.findIndex(song => song.youtubeId === ytid);
-        if (index !== -1) {
-            playSong(index);
+// Seeks back or forth in time when user drags the progress bar slider range
+if (DOM.seekSlider) {
+    DOM.seekSlider.addEventListener("input", () => {
+        if (player && typeof player.seekTo === "function") {
+            const duration = player.getDuration(); 
+            const seekToSeconds = (DOM.seekSlider.value / 100) * duration;
+            player.seekTo(seekToSeconds, true);
         }
-    }
-});
-
-// ==========================================================================
-// 15. SEARCH CONTROLLERS: Toggles and drives input querying searches
-// ==========================================================================
-
-const searchInput = document.getElementById("search-input");
-const searchContainer = document.getElementById("search-container");
-const headerSearchBtn = document.getElementById("header-search-btn");
-const searchCloseBtn = document.getElementById("search-close-btn");
-const librarySearchBtn = document.getElementById("library-search-btn");
-
-// Function to reveal and focus the search input field
-function openSearch() {
-    headerSearchBtn.style.display = "none";
-    searchContainer.style.display = "flex";
-    const header = document.querySelector(".header");
-    if (header) header.classList.add("search-active");
-    searchInput.focus();
-}
-
-// Function to close search, clear inputs, and restore list views
-function closeSearch() {
-    searchQuery = "";
-    searchInput.value = "";
-    searchContainer.style.display = "none";
-    headerSearchBtn.style.display = "flex";
-    const header = document.querySelector(".header");
-    if (header) header.classList.remove("search-active");
-    renderSongs(); // Redraw full list
-}
-
-// Event listeners opening search on button clicks
-if (headerSearchBtn) headerSearchBtn.addEventListener("click", openSearch);
-if (librarySearchBtn) librarySearchBtn.addEventListener("click", openSearch);
-
-// Close search bar click handler
-if (searchCloseBtn) searchCloseBtn.addEventListener("click", closeSearch);
-
-// Type detector running dynamic filtering on input queries
-if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-        searchQuery = e.target.value;
-        renderSongs(); // Dynamically filters list cards on every keystroke
     });
 }
 
-// ==========================================================================
-// 16. PLAYBACK UTILITY DECK CONTROLLERS (Shuffle, Surprise Me, Repeat)
-// ==========================================================================
+// Clicking the video overlay player box toggles play/pause states
+if (DOM.videoOverlay) {
+    DOM.videoOverlay.addEventListener("click", () => {
+        if (isPlaying) {
+            if (DOM.pauseBtn) DOM.pauseBtn.click();
+        } else {
+            if (DOM.playBtn) DOM.playBtn.click();
+        }
+    });
+}
 
-const shuffleBtn = document.getElementById("shuffle-btn");
-const repeatBtn = document.getElementById("repeat-btn");
-const surpriseBtn = document.getElementById("surprise-btn");
-
-if (shuffleBtn) {
-    shuffleBtn.addEventListener("click", () => {
+// Playback modifiers: Shuffle, Repeat, Surprise Me
+if (DOM.shuffleBtn) {
+    DOM.shuffleBtn.addEventListener("click", () => {
         isShuffle = !isShuffle;
         localStorage.setItem("isShuffle", JSON.stringify(isShuffle));
-        shuffleBtn.style.color = isShuffle ? "white" : "#b3b3b3";
-        shuffleBtn.style.textShadow = isShuffle ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
+        DOM.shuffleBtn.style.color = isShuffle ? "white" : "#b3b3b3";
+        DOM.shuffleBtn.style.textShadow = isShuffle ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
     });
 }
 
-if (repeatBtn) {
-    repeatBtn.addEventListener("click", () => {
+if (DOM.repeatBtn) {
+    DOM.repeatBtn.addEventListener("click", () => {
         isRepeat = !isRepeat;
         localStorage.setItem("isRepeat", JSON.stringify(isRepeat));
-        repeatBtn.style.color = isRepeat ? "white" : "#b3b3b3";
-        repeatBtn.style.textShadow = isRepeat ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
+        DOM.repeatBtn.style.color = isRepeat ? "white" : "#b3b3b3";
+        DOM.repeatBtn.style.textShadow = isRepeat ? "0 0 5px rgba(255, 255, 255, 0.5)" : "none";
     });
 }
 
-if (surpriseBtn) {
-    surpriseBtn.addEventListener("click", () => {
+if (DOM.surpriseBtn) {
+    DOM.surpriseBtn.addEventListener("click", () => {
         if (songDatabase.length > 0) {
             const randomIndex = Math.floor(Math.random() * songDatabase.length);
             playSong(randomIndex);
@@ -685,32 +527,105 @@ if (surpriseBtn) {
 }
 
 // ==========================================================================
-// 17. MAKING PAGE RESPONSIVE
-//
+// PART 8: RECENTLY PLAYED HISTORY QUEUE
+// ==========================================================================
+let recentlyPlayed = []; 
 
-// RESPONSIVE HAMBURGER SIDEBAR LOGIC
-const hamburgerBtn = document.getElementById("hamburger-btn");
-const closeSidebarBtn = document.getElementById("close-sidebar-btn");
-const leftSidebar = document.querySelector(".left");
+// Adds a song to the history unshift queue, limits list size to 6, and updates sidebar UI
+function addToRecentlyPlayed(song) {
+    recentlyPlayed = recentlyPlayed.filter(item => item.youtubeId !== song.youtubeId);
+    recentlyPlayed.unshift(song);
+    
+    if (recentlyPlayed.length > 6) {
+        recentlyPlayed.pop();
+    }
+    updateRecentlyPlayedUI();
+}
 
-// 1. When the Hamburger is clicked, add the "open" class to slide in the sidebar
-if (hamburgerBtn) {
-    hamburgerBtn.addEventListener("click", () => {
-        leftSidebar.classList.add("open");
+function updateRecentlyPlayedUI() {
+    if (!DOM.recentlyPlayedList) return;
+    DOM.recentlyPlayedList.innerHTML = "";
+    
+    recentlyPlayed.forEach(song => {
+        let li = document.createElement("li");
+        li.setAttribute("data-youtube-id", song.youtubeId);
+        li.innerHTML = `
+            <img src="${song.thumbnail}" alt="${song.title} Cover Art">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 14px; color: white; font-weight: bold; line-height: 1.2;">${song.title}</span>
+                <span style="font-size: 11px; color: #b3b3b3; font-weight: normal; line-height: 1.2;">${song.artist}</span>
+            </div>
+        `;
+        DOM.recentlyPlayedList.appendChild(li);
     });
 }
 
-// 2. When the Close button is clicked, remove the "open" class to slide it back out
-if (closeSidebarBtn) {
-    closeSidebarBtn.addEventListener("click", () => {
-        leftSidebar.classList.remove("open");
+// Clicking a recently played list item loads and starts playing the track
+if (DOM.recentlyPlayedList) {
+    DOM.recentlyPlayedList.addEventListener("click", (e) => {
+        const item = e.target.closest("li");
+        if (item) {
+            const ytid = item.getAttribute("data-youtube-id");
+            if (!ytid) return;
+            
+            const index = songDatabase.findIndex(song => song.youtubeId === ytid);
+            if (index !== -1) {
+                playSong(index);
+            }
+        }
     });
 }
 
-// 3. (Extra convenience) Close the sidebar automatically if a user clicks a song card!
+// ==========================================================================
+// PART 9: SEARCH CONTROLLERS & TOGGLES
+// ==========================================================================
+
+function openSearch() {
+    if (DOM.headerSearchBtn) DOM.headerSearchBtn.style.display = "none";
+    if (DOM.searchContainer) DOM.searchContainer.style.display = "flex";
+    if (DOM.header) DOM.header.classList.add("search-active");
+    if (DOM.searchInput) DOM.searchInput.focus();
+}
+
+function closeSearch() {
+    searchQuery = "";
+    if (DOM.searchInput) DOM.searchInput.value = "";
+    if (DOM.searchContainer) DOM.searchContainer.style.display = "none";
+    if (DOM.headerSearchBtn) DOM.headerSearchBtn.style.display = "flex";
+    if (DOM.header) DOM.header.classList.remove("search-active");
+    renderSongs(); 
+}
+
+if (DOM.headerSearchBtn) DOM.headerSearchBtn.addEventListener("click", openSearch);
+if (DOM.librarySearchBtn) DOM.librarySearchBtn.addEventListener("click", openSearch);
+if (DOM.searchCloseBtn) DOM.searchCloseBtn.addEventListener("click", closeSearch);
+
+if (DOM.searchInput) {
+    DOM.searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderSongs(); 
+    });
+}
+
+// ==========================================================================
+// PART 10: HAMBURGER SIDEBAR SLIDE DRAWER HANDLERS
+// ==========================================================================
+
+if (DOM.hamburgerBtn) {
+    DOM.hamburgerBtn.addEventListener("click", () => {
+        if (DOM.leftSidebar) DOM.leftSidebar.classList.add("open");
+    });
+}
+
+if (DOM.closeSidebarBtn) {
+    DOM.closeSidebarBtn.addEventListener("click", () => {
+        if (DOM.leftSidebar) DOM.leftSidebar.classList.remove("open");
+    });
+}
+
+// Close the sidebar automatically if a user clicks a song card
 document.addEventListener("click", (e) => {
-    // If the click is inside a song card, close the sidebar
-    if (e.target.closest(".song-card")) {
-        leftSidebar.classList.remove("open");
+    if (e.target.closest(".card") && DOM.leftSidebar) {
+        DOM.leftSidebar.classList.remove("open");
     }
 });

@@ -5,746 +5,534 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..1000&display=swap');
 
 /* ==========================================================================
+   REUSABLE UTILITY CLASSES (Merged from utilities.css)
+   ========================================================================== */
+.border  {
+    margin: 2px;
+    border-radius: 10px;
+}
+
+.flex  {
+    display: flex;
+}
+
+.justify-center  {
+    justify-content: center;
+}
+
+.items-center  {
+    align-items: center;
+}
+
+.bg-ele  {
+    background-color: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ==========================================================================
    GLOBAL RESET & MAIN LAYOUT SETTINGS
    ========================================================================== */
 /* Global selector targeting every node element on the page */
-* {
+*  {
     margin: 1px;
-    /* Sets a tiny uniform space outside every element's boundary border box */
     padding: 1px;
-    /* Sets a tiny uniform space between the border box and inside content */
     box-sizing: border-box;
-    /* Instructs browser to calculation total width/height inclusive of padding and borders */
     font-family: "DM Sans", sans-serif;
-    /* Implements the imported font with clean geometric fallback typography */
     font-weight: bold;
-    /* Forces all text across the entire document structure to be heavy/bolded */
 }
 
 /* Base style rules governing the top-level body background canvas */
 html,
-body {
+body  {
     background-color: black;
-    /* Paints the fundamental page background canvas completely dark */
     color: white;
-    /* Mandates all system font copy outputs default to crisp solid white */
     overflow: hidden;
-    /* Cleanly suppresses all page-level scrollbars since columns scroll internally */
     height: 100vh;
     width: 100vw;
 }
 
 /* Page structural wrapper locking layout columns */
-.container {
+.container  {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
     position: relative;
     z-index: 10;
-    /* Overlay above background blobs */
 }
 
 /* ==========================================================================
    THREE-PANEL STRUCTURE (SIDEBARS & MIDDLE WORKSPACE)
    ========================================================================== */
 /* The layout column housing the logo navigation links and the user playlists array */
-.left {
+.left  {
     width: 20vw;
-    /* Constrains horizontal room precisely to 20% of the display viewport's full width */
     height: calc(100vh - 20px);
-    /* Binds vertical sidebar space exactly to the visible viewport height */
     padding: 10px;
-    /* Creates breathing cushion gaps between outer container edges and inside boxes */
     display: flex;
-    /* Activates flexible layout matrix tools to organize inside layout rows or items */
     flex-direction: column;
-    /* Forces nested element children to stack vertically up-to-down instead of left-to-right */
     gap: 5px;
-    /* Distributes clean vertical gutters separating adjacent internal elements */
 }
 
 /* The central primary screen block displaying main playlists data lists */
-.middle {
+.middle  {
     width: 55vw;
-    /* Designates the focal centerpiece column to command exactly 60% of viewport width */
     height: calc(100vh - 20px);
-    /* Binds vertical centerpiece workspace space exactly to the visible viewport height */
     padding: 10px;
-    /* Insures inner core borders don't squeeze directly against inner text blocks */
     display: flex;
-    /* Triggers flexible structural rendering behavior modes */
     flex-direction: column;
-    /* Establishes vertical element stacks inside this container block */
     gap: 5px;
-    /* Standardizes spatial gutters separating child element nodes vertically */
     overflow: hidden;
-    /* Suppresses page-level scrollbars since children scroll internally */
 }
 
 /* The rightmost panel dedicated to managing profile states and full deck player controls */
-.right {
+.right  {
     width: 25vw;
-    /* Limits the dashboard control bay column spacing precisely to 20% of viewport width */
     height: calc(100vh - 20px);
-    /* Binds vertical sidebar controls space exactly to the visible viewport height */
     padding: 6px;
-    /* Generates spatial buffer padding room within the boundaries of the element */
     display: flex;
-    /* Empowers internal contents to scale, distribute, and space efficiently */
     flex-direction: column;
-    /* Orients internal child layout components along a clean vertical stack */
     gap: 5px;
-    /* Configures uniform gaps between adjacent items inside the box layout */
 }
 
 /* ==========================================================================
    LEFT SIDE PANEL - HOME MODULE
    ========================================================================== */
 /* Target rules configuring lists belonging specifically to the static home anchor element block */
-.home ul li {
+.home ul li  {
     display: flex;
-    /* Places internal assets like graphical iconography inline right next to row label words */
     align-items: center;
-    /* Balances elements evenly along the horizontal median baseline grid */
     gap: 15px;
-    /* Drives comfortable gaps separating standard graphic visual vectors and strings */
     list-style: none;
-    /* Instructs standard lists to dump ugly default dark circular bullet shapes */
     padding-top: 12px;
-    /* Adds vertical headroom breathing space over each line item */
 }
 
 /* Inline images housed directly within the navigation panel block list */
-.home ul li img {
+.home ul li img  {
     width: 15px;
-    /* Scales the standard graphical icon widths precisely down to micro 15-pixel proportions */
 }
 
 /* ==========================================================================
    LEFT SIDE PANEL - MUSIC LIBRARY INTERACTION BARS
    ========================================================================== */
 /* The top interaction dashboard element row within the customizable dynamic library block */
-.line1 {
+.line1  {
     display: flex;
-    /* Converts list grouping to flexbox format formatting layout rules */
     justify-content: space-between;
-    /* Positions the title asset far left and the '+' utility far right */
     align-items: center;
-    /* Centers the title and button perfectly along their horizontal axis */
     list-style: none;
-    /* Sanitizes standard line layout points to block default browser dot tags */
     padding: 0;
-    /* Wipes away browser-native horizontal and vertical padding offsets */
     margin: 0;
-    /* Strips away native container structural margin spacing defaults */
 }
 
 /* Target parameters for child items living straight within the primary utility line box */
-.line1 li {
+.line1 li  {
     display: flex;
-    /* Enables item contents to balance neatly side-by-side inside the component */
     align-items: center;
-    /* Formats internal child node heights directly on center track */
     gap: 12px;
-    /* Produces standard spatial breaks separating library graphics and text characters */
 }
 
 /* Targets the exact first item inside our list array structure */
-.line1 li:first-child {
+.line1 li:first-child  {
     white-space: nowrap;
-    /* Forbids text words from splitting up and wrapping downward onto secondary lines */
 }
 
 /* Graphical display metrics for images parked in standard navigation row arrays */
-.line1 img {
+.line1 img  {
     width: 25px;
-    /* Allocates standard 25px width sizing targets for standard navigation metrics */
 }
 
 /* ==========================================================================
    BUTTON AND SELECTION INTERACTION INTERFACES
    ========================================================================== */
 /* Action button element trigger managing dynamic new custom user playlist additions */
-.playlist_button {
+.playlist_button  {
     display: flex;
-    /* Grants alignment configurations inside the button component structure */
     justify-content: center;
-    /* Centers the visual math text symbol exactly horizontally */
     align-items: center;
-    /* Positions the text symbol perfectly vertically inside the button */
     transition: 0.2s;
-    /* Smooths out visual element feedback adjustments over 200 milliseconds */
     width: 30px;
-    /* Measures structural button horizontal area boundary to 30 pixels flat */
     height: 30px;
-    /* Restricts operational button vertical layout constraints to 30 pixels flat */
     font-size: 25px;
-    /* Enlarges the graphical look of the operational character inside */
     font-weight: 300;
-    /* Thins out visual character lines to achieve standard minimalistic aesthetics */
     border: none;
-    /* Trashes default ugly thick system frame outlines automatically */
     border-radius: 50%;
-    /* Forces the bounding edges to collapse completely into a round circle shape */
     color: white;
-    /* Colors character markers pure white */
     cursor: pointer;
-    /* Alters pointer states instantly into index selection fingers on mouse hover */
 }
 
 /* Interactive focus trigger tracking physical cursor inputs over the dynamic action layout button */
-.playlist_button:hover {
+.playlist_button:hover  {
     background-color: #4a4a4a;
-    /* Shifts background colors to dark graphite shades providing immediate interactive hints */
 }
 
 /* Secondary sorting category filter control bar structure layout */
-.line2 {
+.line2  {
     display: flex;
-    /* Sets up simple element alignments side-by-side inside the item grid layout */
     justify-content: space-between;
-    /* Ensures the filter sorting nodes split apart cleanly to occupy edges */
     margin-top: 15px;
-    /* Applies vertical structural space over this row grid layout */
 }
 
 /* Individual interaction capsule selector items within sorting lists */
-.b2 {
+.b2  {
     width: 70px;
-    /* Limits button footprint area width to 70 pixels wide */
     height: 30px;
-    /* Sets standard functional track height metrics down to 30 pixels */
     transition: 0.2s;
-    /* Animates reactive properties uniformly for smooth presentation flows */
     border: none;
-    /* Erases default browser box perimeter borders entirely */
     border-radius: 20px;
-    /* Curves bounding geometry shapes into smooth pill-style capsules */
     color: white;
-    /* Forces labeling characters inside the item to look solid white */
     font-weight: 600;
-    /* Applies clean semi-bold look weights directly onto the button text strings */
     cursor: pointer;
-    /* Reveals user system interactive choice finger cues on mouse intersections */
 }
 
 /* Active system track updates triggered by user tracking cursor overlays on sorting items */
-.b2:hover {
+.b2:hover  {
     background-color: #4a4a4a;
-    /* Alters background shades up to clean visible greyscale values */
 }
 
 /* Tertiary filtering data line container row definition blocks */
-.line3 {
+.line3  {
     display: flex;
-    /* Employs flexbox alignment logic rules across the row component */
     justify-content: space-between;
-    /* Positions the navigation search items and recency filters at opposite ends */
     align-items: center;
-    /* Standardizes horizontal line center values across inner items */
     margin-top: 15px;
-    /* Enforces clean layout gaps right above the line section item block */
     list-style: none;
-    /* Deletes generic layout bullet markers from rendering onto the viewport */
     padding: 0;
-    /* Resets default browser cell indentation margins back to absolute zero */
 }
 
 /* Child node alignment within structural layout filtering rows */
-.line3 li {
+.line3 li  {
     display: flex;
-    /* Activates inline layout distribution engines within sublist tags */
     align-items: center;
-    /* Anchors inline image frames on standard line horizontal centers */
     gap: 8px;
-    /* Generates spatial breaks separating inline layout glyph assets and text */
 }
 
 /* Specific vector layout sizing constraints inside contextual lists */
-.line3 img {
+.line3 img  {
     width: 20px;
-    /* Enforces fixed sizing metrics bounding graphic icon vector widths to 20 pixels */
 }
 
 /* Circular quick-search icon button container attributes */
-.b3 {
+.b3  {
     width: 30px;
-    /* Standardizes item operational width metrics to 30 pixels flat */
     height: 30px;
-    /* Standardizes item operational height metrics to 30 pixels flat */
     transition: 0.2s;
-    /* Smoothly sweeps element style changes across interactive focus triggers */
     border: none;
-    /* Instructs the browser engine to drop default rigid button outlines */
     border-radius: 50%;
-    /* Curves square border outlines into absolute perfect structural circles */
     color: white;
-    /* Sets inside graphic coloring elements to flat solid white shades */
     cursor: pointer;
-    /* Adjusts cursor lookups to clear selection click pointers instantly */
 }
 
 /* Hover parameter adjustments for the secondary search selector */
-.b3:hover {
+.b3:hover  {
     background-color: #4a4a4a;
-    /* Illuminates visual boundaries on cursor hover actions */
 }
 
 /* ==========================================================================
    LEFT SIDE PANEL - PLAYLIST STREAM ROWS
    ========================================================================== */
 /* Sidebar Home box - must not shrink */
-.home {
+.home  {
     flex-shrink: 0;
 }
 
 /* Sidebar Library box - occupies remaining space and contains the scrollable list */
-.library {
+.library  {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* Stops library container from stretching */
     min-height: 0;
-    /* Flexbox rule to allow child scrolling */
 }
 
 /* The wrapping structural block housing dynamic scrollable collections */
-.playlists {
+.playlists  {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    /* Suppresses horizontal scrollbars inside the sidebar library list */
 }
 
 /* Main list settings inside structural stream components */
-.playlists ul {
+.playlists ul  {
     display: flex;
-    /* Transforms display logic engines to manage element lines natively */
     flex-direction: column;
-    /* Forces dynamic playlists to stack vertically */
     gap: 12px;
-    /* Preserves fixed spacing gutters tracking between stacked list item blocks */
     list-style: none;
-    /* Keeps structure clear of native browser bullet markup nodes */
     padding: 0;
-    /* Trims down default left block list indentations to clean absolute zero values */
     margin-top: 20px;
-    /* Separates the start of stream lists from previous controls by 20 pixels */
 }
 
 /* Individual layout tracking lines representing separate custom playlists */
-.playlists ul li {
+.playlists ul li  {
     display: flex;
-    /* Standardizes lateral side-by-side presentation mechanics for media metadata */
     align-items: center;
-    /* Corrects visual vertical skew by aligning elements perfectly along the center axis */
     gap: 15px;
-    /* Defines clear distance measurements running between art thumbnails and text blocks */
     transition: 0.2s;
-    /* Promises fluid tone adjustments across interactive state modifications */
     padding: 8px;
-    /* Sets equal room borders tracking within inside structural container blocks */
     border-radius: 8px;
-    /* Softens layout element frame lines by setting clean 8px radius geometry curves */
     cursor: pointer;
-    /* Switches arrow cursors out for clicking pointers to signify interaction */
 }
 
 /* Style behavior updates executed when user tracking selectors land over playlist lines */
-.playlists ul li:hover {
+.playlists ul li:hover  {
     background-color: #2a2a2a;
-    /* Darkens track cells slightly to emphasize actively highlighted items */
 }
 
 /* Graphical display parameters governing thumbnail graphics inside rows */
-.playlists ul li img {
+.playlists ul li img  {
     width: 40px;
-    /* Scales thumbnail container widths down to standard 40 pixels wide */
     height: 40px;
-    /* Scales thumbnail container heights down to standard 40 pixels tall */
     border-radius: 10px;
-    /* Adds geometric curves onto image corner paths */
     border: 2px solid black;
-    /* Imposes solid protective dark outlines framing structural graphic content blocks */
     flex-shrink: 0;
-    /* Safeguards structural rendering targets by denying flex containers sizing shrink metrics */
 }
 
 /* ==========================================================================
    CENTER PANEL - INTERACTIVE PLATFORM WORKSPACES
    ========================================================================== */
 /* The persistent utility tool bar layout positioned over primary platform feeds */
-.header {
+.header  {
     border: 2px solid black;
-    /* Locks standard perimeter tracking bounds in solid stark black */
     height: 45px;
-    /* Establishes hard vertical sizing limits bounding header zones to 45 pixels */
     width: 100%;
-    /* Broadens component limits to fill all space across parent workspace fields */
     border-radius: 25px;
-    /* Curving frame elements down to create modern pill design contours */
     display: flex;
-    /* Coordinates item formatting inside unified layout flow grids */
     align-items: center;
-    /* Centers header selections perfectly along standard horizontal centers */
     gap: 5px;
-    /* Establishes basic micro breaks tracking between horizontal buttons */
     padding: 0 3px 0 4px;
-    /* Secures asymmetrical layout cushion padding across header bounding frames */
 }
 
 /* Interface buttons residing directly within workspace header matrices */
-.header button {
+.header button  {
     width: 120px;
-    /* Grants individual capsule filters structural widths measuring 120 pixels wide */
     height: 30px;
-    /* Sets standardized functional operational heights down to 30 pixels */
     transition: 0.2s;
-    /* Smoothly scales aesthetic changes when mouse events pass through elements */
     border: none;
-    /* Nullifies default browser system perimeter box border rendering */
     border-radius: 20px;
-    /* Rounds terminal button points into smooth capsule contours */
     color: white;
-    /* Forces labeling textual assets inside to read crisp solid white */
     font-weight: 600;
-    /* Boosts text character weight properties for clearer scan readability */
     cursor: pointer;
-    /* Alerts workspace guests with classic click cursor hand models */
 }
 
 /* Hover adjustments modifying filtering actions located within the page header */
-.header button:hover {
+.header button:hover  {
     background-color: #4a4a4a;
-    /* Shifts color profiles up to signal active selection tracking feedback loops */
 }
 
 /* Unique properties handling search utility keys inside workspace headers */
-.header .search {
+.header .search  {
     display: flex;
-    /* Builds a flexible block environment for centering internal icon structures */
     justify-content: center;
-    /* Anchors search geometry assets horizontally center */
     align-items: center;
-    /* Anchors search geometry assets vertically center */
     transition: 0.2s;
-    /* Tracks visual animation properties cleanly for modern responsiveness */
     width: 30px;
-    /* Limits structural search button footprints to an absolute 30px square width */
     height: 30px;
-    /* Limits structural search button footprints to an absolute 30px square height */
     font-size: 25px;
-    /* Scales baseline sizing indicators for inside text characters up to 25px */
     font-weight: 300;
-    /* Softens icon presentation paths down by dropping line density rules */
     border: none;
-    /* Removes default native browser framing properties completely */
     border-radius: 50%;
-    /* Forces layout bounds to lock into flawless spherical parameters */
     color: white;
-    /* Specifies base line element color parameters down to standard white values */
     cursor: pointer;
-    /* Deploys standard selecting hand cursors over interaction environments */
     margin-left: auto;
-    /* Forces the item to consume all left space, driving the search key far right */
 }
 
 /* Visual dimensions constraining vectors placed in header filtering button arrays */
-.header button img {
+.header button img  {
     width: 20px;
-    /* Confines header vector dimensions down to clean, scalable 20px dimensions */
 }
 
 /* Main primary screen container blocks driving user music selection tracking views */
-.player {
+.player  {
     flex: 1;
-    /* Authorizes this section block to grab all open real estate left inside the center container */
     display: flex;
-    /* Triggers flexible structural rendering behavior modes */
     flex-direction: column;
-    /* STACKS CARDS VERTICALLY INSIDE THE CONTAINER */
     justify-content: flex-start;
-    /* Aligns songs starting from the top */
     align-items: stretch;
-    /* FORCES THE ROWS TO EXPAND TO FULL WIDTH */
     border: 2px solid rgb(37, 37, 37);
-    /* Establishes a medium solid dark gray border outline */
     background-color: rgb(37, 37, 37);
-    /* Paints the player container background dark gray */
     padding: 10px;
-    /* Pads interior edges to cushion inner track card rows */
     box-sizing: border-box;
-    /* Instructs browser to compute width/height inclusive of padding and border */
     margin: 10px;
-    /* Separates the inner player content container from layout boundaries by 10px */
     overflow-y: auto;
-    /* ENABLES VERTICAL SCROLLING FOR WIDE PLAYLISTS */
     overflow-x: hidden;
-    /* Suppresses horizontal scrollbars inside the playlist */
 }
-
 
 /* ==========================================================================
    DYNAMIC MUSIC PLAYER TRACK CARDS
    ========================================================================== */
 
 /* Main wrapper row for a song track entry */
-.card {
+.card  {
     display: flex;
-    /* Aligns album thumb and description text side-by-side */
     background-color: #1a1a1a;
-    /* Subtle dark background highlighting the row card */
     width: 100%;
-    /* Spans to seamlessly fit the middle container's inner width */
     height: 80px;
-    /* Fixed compact row height suitable for layout tracking lists */
     border-radius: 8px;
-    /* Consistent border corners matching standard ui panels */
     align-items: center;
-    /* Vertically centers both artwork images and labels */
     padding: 10px;
-    /* Creates interior breathing cushions within the card row */
     margin-bottom: 8px;
-    /* Clear separation gutter between sequential row lists */
     cursor: pointer;
-    /* Swaps default cursor to interactive action finger */
     transition: background 0.2s ease;
 }
 
 /* Brighten row card background on interactive mouse hover */
-.card:hover {
+.card:hover  {
     background-color: #2a2a2a;
 }
 
 /* Image bounding container block */
-.image {
+.image  {
     position: relative;
-    /* Necessary constraint for absolute positioning the time capsule */
     flex-shrink: 0;
-    /* Protects structural geometry by blocking width shrinkage */
 }
 
 /* Hard specifications framing custom album track thumbnails */
-.image img {
+.image img  {
     width: 60px;
-    /* Square sizing geometry matching profile layout trends */
     height: 60px;
     object-fit: cover;
-    /* Crops varying aspect ratios cleanly to fill the frame */
     border-radius: 4px;
-    /* Slightly softened image border corners */
     display: block;
-    /* Drops inline element structural spacing quirks */
 }
 
 /* Floating timestamp indicator tag */
-.image .capsule {
+.image .capsule  {
     position: absolute;
-    /* Pops out of normal flow layout grids */
     right: 4px;
-    /* Fastens to bottom-right boundary quadrant paths */
     bottom: 4px;
     color: white;
-    /* Solid white text markers */
     background-color: rgba(0, 0, 0, 0.75);
-    /* Translucent shield layer boosting visibility */
     padding: 1px 4px;
-    /* Micro structural padding buffer metrics */
     border-radius: 3px;
-    /* Matching structural capsule curves */
     font-size: 11px;
-    /* Clean downscaled text legibility */
 }
 
 /* Left typography margin configurations tracking next to artwork */
-.text h2 {
+.text h2  {
     color: white;
-    /* Stark white track typography title emphasis styling */
     font-size: 16px;
-    /* Prominent scaling hierarchy separating headers */
     margin: 0 0 4px 15px;
-    /* Imposes strict left positioning spacing offsets */
 }
 
-.text p {
+.text p  {
     color: #b3b3b3;
-    /* Subdued grey coloring tracking across metadata parameters */
     font-size: 13px;
-    /* Minor typographical footprint setting legible labels */
     margin: 0 0 0 15px;
-    /* Aligns description text evenly beneath the bold header title */
 }
 
 /* TRACK CARD LIKE BUTTON STYLING */
 
 /* The wrapping container around the like button */
-.card>div:last-child {
+.card>div:last-child  {
     margin-left: auto;
-    /* Forces the entire block to slide completely to the right edge of the card */
     display: flex;
-    /* Sets clean internal alignments */
     align-items: center;
-    /* Centers the button vertically within its space */
     padding-right: 10px;
-    /* Adds a small breathing room gap from the right border */
 }
 
 /* The style rules for the like button itself */
-.like {
+.like  {
     background-color: transparent;
-    /* Makes its background seamlessly match the parent card color */
     color: #b3b3b3;
-    /* Subdued gray color matching your song description text */
     border: none;
-    /* Removes default browser button borders */
     font-size: 22px;
-    /* Enlarges the heart icon symbol for clear clarity */
     cursor: pointer;
-    /* Switches the cursor to an action selection finger */
     padding: 8px;
-    /* Creates an invisible interactive clicking zone around the heart */
     border-radius: 50%;
-    /* Keeps the hover background circular */
     display: flex;
-    /* Centers the text symbol perfectly inside its padding */
     justify-content: center;
     align-items: center;
     transition: transform 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-    /* Fluid transitions matching other deck buttons */
 }
 
 /* Hover effects tracking active user interactions */
-.like:hover {
+.like:hover  {
     color: #ffffff;
-    /* Lights up the heart icon to bright solid white on hover */
     background-color: #2a2a2a;
-    /* Gives it a subtle dark circular backdrop bubble on hover */
     transform: scale(1.1);
-    /* Smoothly scales the icon up slightly for a nice physical click effect */
 }
 
 /* Active red heart state style rule for liked songs */
-.like.liked-active {
+.like.liked-active  {
     color: #ff4d4d !important;
-    /* Forces the heart icon to light up as a glowing red heart */
 }
 
 /* ==========================================================================
    RIGHT SIDE PANEL - PROFILE & NOW PLAYING ELEMENTS
    ========================================================================== */
 /* User authentication state dashboard item blocks */
-.account {
+.account  {
     border-radius: 12px;
-    /* Standardizes container curves to 12px parameter arcs */
     padding: 10px;
-    /* Enforces interior breathing cushions tracking inside the layout panel */
 }
 
 /* Internal formatting settings governing lists within the user profile interface block */
-.account ul li {
+.account ul li  {
     list-style: none;
-    /* Deletes default graphical markup listing dots from processing fields */
     display: flex;
-    /* Enables side-by-side array logic patterns for user metadata units */
     align-items: center;
-    /* Ensures avatar geometry and profile characters share the exact horizontal center */
     justify-content: flex-start;
-    /* Forces data blocks to pack tightly against the left boundary margin lines */
     gap: 15px;
-    /* Opens breathing space gaps running between profile art assets and text labels */
 }
 
 /* Dimensional properties tracking user account picture avatar components */
-.account ul li img {
+.account ul li img  {
     width: 35px;
-    /* Dictates explicit horizontal width targets bounding avatar sizes to 35 pixels */
 }
 
 /* System account management action button interfaces */
-.account button {
+.account button  {
     width: 100px;
-    /* Locks profile log-out trigger button metrics to 100 pixels wide */
     height: 30px;
-    /* Locks profile log-out trigger button metrics to 30 pixels high */
     border: none;
-    /* Extinguishes native system border outline profiles entirely */
     border-radius: 20px;
-    /* Converts standard straight box perimeters into capsule curves */
     transition: 0.2s;
-    /* Smoothly controls property adaptations across shifting interactive states */
     color: white;
-    /* Mandates text labeling color properties output as pure solid white */
     font-weight: 600;
-    /* Adds extra character thickness properties to boost button copy clarity */
     cursor: pointer;
-    /* Fires system user selection indicators instantly when pointer enters element bounds */
 }
 
 /* Active cursor overlay reactions adapting user account buttons */
-.account button:hover {
+.account button:hover  {
     background-color: #4a4a4a;
-    /* Shifts button values cleanly to graphite greyscale profiles on active hover states */
 }
 
 /* The structural visual panel managing current active media play decks */
-.display {
+.display  {
     flex: 1;
-    /* Directs current deck assets to expand fully and occupy remaining vertical space */
     border-radius: 12px;
-    /* Aligns active display frame curves perfectly with account block geometries */
     display: flex;
-    /* Activates flexbox alignment inside the display card */
     flex-direction: column;
-    /* Stacks items vertically */
     justify-content: center;
-    /* Centers items vertically within the panel */
     align-items: center;
-    /* Centers items horizontally within the panel */
     padding: 20px 10px;
-    /* Pads inside edges to cushion player elements */
 }
 
 /* Base list wrapper inside the display card */
-.display ul {
+.display ul  {
     width: 100%;
-    /* Spans full width of parent display card */
     padding: 0;
-    /* Wipes browser default padding */
     margin: 0;
-    /* Wipes browser default margin */
     display: flex;
-    /* Flexbox layout to align list items */
     flex-direction: column;
-    /* Stacks list items vertically */
     align-items: center;
-    /* Centers items horizontally */
     gap: 15px;
-    /* Equal spacing gap between elements */
 }
 
 /* Structure modifiers managing list structures housed within active music display items */
-.display ul li {
+.display ul li  {
     list-style: none;
-    /* Keeps structure lists completely clean of default layout bullets */
     width: 100%;
-    /* Spans full width of the parent list */
     display: flex;
-    /* Flex layout to center content */
     justify-content: center;
-    /* Centers child components horizontally */
 }
 
 /* Primary structural attributes shaping active track album artwork elements */
-#yt-player {
+#yt-player  {
     border: 2px solid black;
-    /* Frame outline matches design bounds */
     border-radius: 10px;
-    /* Curve corners matching panel geometry */
     width: 220px;
-    /* Matches the original cover width */
     height: 130px;
-    /* Set to 130px to match standard widescreen 16:9 aspect ratio */
     display: block;
 }
 
@@ -752,57 +540,41 @@ body {
    MEDIA CONTROLS & TIMELINE INTERFACES
    ========================================================================== */
 /* Primary vertical structural column grouping media keys and seeking rails uniformly */
-.controls-container {
+.controls-container  {
     display: flex;
-    /* Configures flex formatting algorithms for control elements */
     flex-direction: column;
-    /* Vertically stacks media navigation arrays cleanly over the seeking slider */
     align-items: center;
-    /* Centers horizontal median layout positions exactly down the middle axis */
     width: 100%;
-    /* Spans control architecture limits completely out to match container borders */
 }
 
 /* The standalone horizontal alignment row managing media navigation trigger keys */
-.controls {
+.controls  {
     display: flex;
-    /* Standardizes horizontal display alignments across media navigation buttons */
     justify-content: center;
-    /* Balances playback control arrays precisely down the horizontal screen center */
     align-items: center;
-    /* Stabilizes visual line balances across varying arrow asset vectors */
     gap: 3px;
-    /* Sets precise close spacing breaks tracking between control system buttons */
 }
 
 /* Individual interaction control buttons driving track navigation actions */
-.control-btn {
+.control-btn  {
     width: 36px;
-    /* Symmetrical operational width spaces for navigation keys */
     height: 36px;
-    /* Symmetrical operational height spaces for navigation keys */
     display: flex;
-    /* Centers icon elements inside key bases */
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    /* Perfect round circles */
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    
-    /* Liquid Glass styling */
-    background: rgba(255, 255, 255, 0.03); /* Extremely transparent liquid base */
-    border: 1px solid rgba(255, 255, 255, 0.12); /* Thin refractive edge outline */
-    backdrop-filter: blur(16px); /* Liquid blur effect */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    
-    /* Inset rim light reflection and soft drop shadow */
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 
-                0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Make sure inner SVGs fit nicely inside the liquid circles */
-.control-btn svg {
+.control-btn svg  {
     width: 14px;
     height: 14px;
     color: white;
@@ -811,15 +583,15 @@ body {
 }
 
 /* Active feedback transformations applied when mouse positions rest over control keys */
-.control-btn:hover {
-    background-color: rgba(255, 255, 255, 0.08); /* Glows slightly on hover */
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35), 
-                0 6px 14px rgba(0, 0, 0, 0.4);
-    transform: scale(1.08); /* Inflates subtly */
+.control-btn:hover  {
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    0 6px 14px rgba(0, 0, 0, 0.4);
+    transform: scale(1.08);
 }
 
 /* Click/Touch press shrink feedback */
-.control-btn:active {
+.control-btn:active  {
     transform: scale(0.95);
 }
 
@@ -827,31 +599,21 @@ body {
    TIMELINE PROGRESS SECTOR
    ========================================================================== */
 /* The core input range slider component driving real-time song scrubbing features */
-.progress {
+.progress  {
     -webkit-appearance: none;
-    /* Hard resets native browser structural engine styling constraints inside Chrome/Safari */
     appearance: none;
-    /* Deactivates basic default operating system rendering guidelines for ranges */
     width: 200px;
-    /* Tailors horizontal scrubber tracking limits precisely down to 200 pixels */
     height: 3px;
-    /* Slashes track thickness values to implement modern sleek minimalistic lines */
     background: #4a4a4a;
-    /* Paints the baseline unplayed timeline track in deep solid gray */
     border-radius: 5px;
-    /* Softens tracking line tip configurations with smooth rounding values */
     cursor: pointer;
-    /* Swaps out standard text select bars for select clickers along track fields */
     margin-top: 20px;
-    /* Insulates the scrubbing track layer safely down away from media button rows */
     transition: background 0.2s ease;
-    /* Fluidly eases overall track color transitions over 200ms */
 }
 
 /* Visual color transitions triggered across range tracks on cursor entrance actions */
-.progress:hover {
+.progress:hover  {
     background: #6a6a6a;
-    /* Illuminates unplayed tracking bars to visible mid-gray tones on interaction */
 }
 
 /* ==========================================================================
@@ -859,57 +621,49 @@ body {
    ========================================================================== */
 
 /* Customize scrollbar layout globally */
-::-webkit-scrollbar {
+::-webkit-scrollbar  {
     width: 6px;
-    /* Makes vertical scrollbars thin */
     height: 0px;
-    /* Disables horizontal scrollbars entirely */
 }
 
 /* Customize scrollbar track (background) */
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track  {
     background: #121212;
-    /* Dark blackish background track matching Spotify dark theme */
     border-radius: 10px;
 }
 
 /* Customize scrollbar thumb (handle) */
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb  {
     background: #282828;
-    /* Thin dark charcoal thumb handle */
     border-radius: 10px;
     border: 1px solid #121212;
-    /* Inner spacing outline */
     transition: background-color 0.2s ease;
 }
 
 /* Hover state changes for thumb handles */
-::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover  {
     background: #3e3e3e;
-    /* Highlights thumb handle slightly on active hover */
 }
 
 /* ==========================================================================
    GLOWING AUDIO VISUALIZER (Monochrome White)
    ========================================================================== */
 
-.visualizer-container {
+.visualizer-container  {
     display: flex;
     align-items: flex-end;
     justify-content: center;
     gap: 4px;
     height: 70px;
-    /* Sized perfectly to fit below progress slider without overflow */
     padding: 10px 0;
     margin-top: 10px;
     box-sizing: border-box;
     width: 100%;
 }
 
-.visualizer-container .bar {
+.visualizer-container .bar  {
     width: 3.5px;
     height: 6px;
-    /* Default flat baseline height when paused */
     background: white;
     border-radius: 2px;
     opacity: 0.25;
@@ -917,75 +671,74 @@ body {
 }
 
 /* Keyframe animations mimicking multi-frequency equalizer bands */
-@keyframes bounceA {
+@keyframes bounceA  {
     0% {
-        height: 6px;
-    }
-
-    100% {
-        height: 42px;
-    }
+    height: 6px;
 }
 
-@keyframes bounceB {
-    0% {
-        height: 8px;
-    }
-
-    100% {
-        height: 58px;
-    }
+    100%  {
+    height: 42px;
+}
 }
 
-@keyframes bounceC {
+@keyframes bounceB  {
     0% {
-        height: 6px;
-    }
-
-    100% {
-        height: 32px;
-    }
+    height: 8px;
 }
 
-@keyframes bounceD {
-    0% {
-        height: 10px;
-    }
+    100%  {
+    height: 58px;
+}
+}
 
-    100% {
-        height: 50px;
-    }
+@keyframes bounceC  {
+    0% {
+    height: 6px;
+}
+
+    100%  {
+    height: 32px;
+}
+}
+
+@keyframes bounceD  {
+    0% {
+    height: 10px;
+}
+
+    100%  {
+    height: 50px;
+}
 }
 
 /* Activate glowing animations when .playing class is applied */
-.visualizer-container.playing .bar {
+.visualizer-container.playing .bar  {
     opacity: 0.95;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.85);
-    /* High-tech glowing neon visualizer */
 }
 
-.visualizer-container.playing .bar:nth-child(3n+1) {
+.visualizer-container.playing .bar:nth-child(3n+1)  {
     animation: bounceA 0.75s ease-in-out infinite alternate;
 }
 
-.visualizer-container.playing .bar:nth-child(3n+2) {
+.visualizer-container.playing .bar:nth-child(3n+2)  {
     animation: bounceB 0.55s ease-in-out infinite alternate;
 }
 
-.visualizer-container.playing .bar:nth-child(3n) {
+.visualizer-container.playing .bar:nth-child(3n)  {
     animation: bounceC 0.85s ease-in-out infinite alternate;
 }
 
-.visualizer-container.playing .bar:nth-child(4n) {
+.visualizer-container.playing .bar:nth-child(4n)  {
     animation: bounceD 0.65s ease-in-out infinite alternate;
 }
 
 /* Add slight delay offsets to make the waveform look organic and flowing */
-.visualizer-container.playing .bar:nth-child(even) {
+.visualizer-container.playing .bar:nth-child(even)  {
     animation-delay: 0.15s;
 }
 
-.visualizer-container.playing .bar:nth-child(3n) {
+.visualizer-container.playing .bar:nth-child(3n)  {
     animation-delay: 0.3s;
 }
 
@@ -994,19 +747,17 @@ body {
    ========================================================================== */
 
 /* Base container for background blobs */
-.login-bg-blob {
+.login-bg-blob  {
     position: fixed;
-    /* Lock relative to viewport for full-screen cover */
     border-radius: 50%;
     filter: blur(100px);
     opacity: 0.35;
-    /* Increased opacity to bleed through glassmorphic cards */
     z-index: 1;
     pointer-events: none;
 }
 
 /* Three distinct floating blobs with different animation speeds */
-.blob-1 {
+.blob-1  {
     width: 350px;
     height: 350px;
     background: rgb(255, 255, 255);
@@ -1015,7 +766,7 @@ body {
     animation: floatBlob1 20s ease-in-out infinite;
 }
 
-.blob-2 {
+.blob-2  {
     width: 450px;
     height: 450px;
     background: rgb(255, 255, 255);
@@ -1024,7 +775,7 @@ body {
     animation: floatBlob2 25s ease-in-out infinite;
 }
 
-.blob-3 {
+.blob-3  {
     width: 280px;
     height: 280px;
     background: rgb(255, 255, 255);
@@ -1034,54 +785,54 @@ body {
 }
 
 /* Staggered floating trajectories */
-@keyframes floatBlob1 {
+@keyframes floatBlob1  {
     0% {
-        transform: translate(0, 0) scale(1);
-    }
-
-    33% {
-        transform: translate(120px, 80px) scale(1.15);
-    }
-
-    66% {
-        transform: translate(-50px, 120px) scale(0.9);
-    }
-
-    100% {
-        transform: translate(0, 0) scale(1);
-    }
+    transform: translate(0, 0) scale(1);
 }
 
-@keyframes floatBlob2 {
-    0% {
-        transform: translate(0, 0) scale(1.1);
-    }
-
-    33% {
-        transform: translate(-150px, -60px) scale(0.95);
-    }
-
-    66% {
-        transform: translate(-80px, -140px) scale(1.15);
-    }
-
-    100% {
-        transform: translate(0, 0) scale(1.1);
-    }
+    33%  {
+    transform: translate(120px, 80px) scale(1.15);
 }
 
-@keyframes floatBlob3 {
+    66%  {
+    transform: translate(-50px, 120px) scale(0.9);
+}
+
+    100%  {
+    transform: translate(0, 0) scale(1);
+}
+}
+
+@keyframes floatBlob2  {
     0% {
-        transform: translate(0, 0) scale(1);
-    }
+    transform: translate(0, 0) scale(1.1);
+}
 
-    50% {
-        transform: translate(90px, -110px) scale(1.2);
-    }
+    33%  {
+    transform: translate(-150px, -60px) scale(0.95);
+}
 
-    100% {
-        transform: translate(0, 0) scale(1);
-    }
+    66%  {
+    transform: translate(-80px, -140px) scale(1.15);
+}
+
+    100%  {
+    transform: translate(0, 0) scale(1.1);
+}
+}
+
+@keyframes floatBlob3  {
+    0% {
+    transform: translate(0, 0) scale(1);
+}
+
+    50%  {
+    transform: translate(90px, -110px) scale(1.2);
+}
+
+    100%  {
+    transform: translate(0, 0) scale(1);
+}
 }
 
 /* ___________________________________________________________________________________________________________________________________________________________ */
@@ -1089,157 +840,140 @@ body {
 /* Making Resposive for Tabs */
 
 /* Media query triggering when screen width is 992px or smaller */
-@media (max-width: 992px) {
-
-    /* Slide the Left Sidebar off-screen to the left */
+@media (max-width: 992px)  {
     .left {
-        position: fixed;
-        top: 0 !important;
-        left: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important; /* Cover full screen width */
-        height: 100% !important; /* Cover full screen height */
-        z-index: 10000 !important; /* Above everything including header/profile */
-        transform: translateX(-100%);
-        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth spring-like slide transition */
-        
-        /* Layout overrides for full screen compatibility */
-        margin: 0 !important;
-        border-radius: 0 !important;
-        border: none !important;
-        
-        /* Blur background like the login page (allows glowing blobs in body to show through) */
-        background: rgba(10, 10, 10, 0.4) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        
-        padding: 65px 20px 20px 20px !important; /* Increased top padding to leave dedicated space for back arrow */
-        box-sizing: border-box !important;
-        overflow-y: auto !important;
-    }
+    position: fixed;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 10000 !important;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: rgba(10, 10, 10, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    padding: 65px 20px 20px 20px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+}
 
     /* Slide it into view when active */
-    .left.open {
-        transform: translateX(0);
-    }
+    .left.open  {
+    transform: translateX(0);
+}
 
     /* Hide the rest of the player workspace (middle & right columns) when the sidebar is open,
        ensuring only the floating blobs and the sidebar cards are rendered */
     .left.open ~ .middle,
-    .left.open ~ .right {
-        display: none !important;
-    }
+    .left.open ~ .right  {
+    display: none !important;
+}
 
     /* Resizing Middle and Right columns */
-    .middle {
-        width: 60vw;
-    }
+    .middle  {
+    width: 60vw;
+}
 
-    .right {
-        width: 40vw;
-    }
+    .right  {
+    width: 40vw;
+}
 
     /* Force show the hamburger button */
-    .hamburger-btn {
-        display: flex !important;
-    }
+    .hamburger-btn  {
+    display: flex !important;
+}
 
     /* Hide liked/trending song buttons when search is active inside the header on mobile/tablet */
     .header.search-active #liked-songs-tab,
-    .header.search-active #trending-songs-tab {
-        display: none !important;
-    }
+    .header.search-active #trending-songs-tab  {
+    display: none !important;
+}
 
     /* Make search container fill the full remaining header width when active */
-    .header.search-active #search-container {
-        display: flex !important;
-        flex-grow: 1;
-        width: auto !important;
-        margin-right: 0 !important;
-    }
+    .header.search-active #search-container  {
+    display: flex !important;
+    flex-grow: 1;
+    width: auto !important;
+    margin-right: 0 !important;
+}
 
     /* Allow the search input inside to fill all available width */
-    .header.search-active #search-input {
-        width: 100% !important;
-    }
+    .header.search-active #search-input  {
+    width: 100% !important;
+}
 
     /* ========================================================== */
     /* THE CLOSE BUTTON: Liquid Glass / Back Arrow Design         */
     /* ========================================================== */
-    .left #close-sidebar-btn {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 17px;
-        right: 20px; /* Position at top-right */
-        left: auto !important;
-        width: 42px; /* Rectangular width */
-        height: 32px; /* Rectangular height */
-        border-radius: 8px; /* Rounded rectangle corners */
-        z-index: 1100;
-        
-        /* 1. Liquid transparency & deep blur */
-        background: rgba(255, 255, 255, 0.03);      /* Almost 100% transparent */
-        border: 1px solid rgba(255, 255, 255, 0.12); /* Super thin refractive edge */
-        backdrop-filter: blur(16px);                 /* Stronger blur to distort the bg blobs */
-        -webkit-backdrop-filter: blur(16px);
-        
-        /* 2. Inset highlight mimics light reflecting inside liquid glass */
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 
-                    0 4px 10px rgba(0, 0, 0, 0.3);
-        
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
+    .left #close-sidebar-btn  {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    left: auto !important;
+    width: 42px;
+    height: 32px;
+    border-radius: 8px;
+    z-index: 1100;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
     /* Hover & Active touch states */
-    .left #close-sidebar-btn:hover {
-        background: rgba(255, 255, 255, 0.08); /* Glows slightly on hover */
-        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35), 
-                    0 6px 14px rgba(0, 0, 0, 0.4);
-        transform: scale(1.05);
-    }
-    .left #close-sidebar-btn:active {
-        transform: scale(0.95);
-    }
+    .left #close-sidebar-btn:hover  {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    0 6px 14px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+    .left #close-sidebar-btn:active  {
+    transform: scale(0.95);
+}
 }
 
 /* Making responsive for Phones */
 
 /* Mobile Stack Query (650px or smaller) */
-@media (max-width: 650px) {
-
-    /* 1. Allow the container to scroll vertically instead of locking side-by-side */
+@media (max-width: 650px)  {
     .container {
-        flex-direction: column !important;
-        overflow-y: auto !important;
-        /* Enable scrolling down to the player */
-    }
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
 
     /* 2. Make both panels command 100% of the screen width */
-    .middle {
-        width: 100% !important;
-        height: auto !important;
-        /* Let it grow with content */
-        overflow: visible !important;
-    }
+    .middle  {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+}
 
-    .right {
-        width: 100% !important;
-        height: auto !important;
-        margin-top: 15px;
-        /* Add some space between song list and player */
-    }
+    .right  {
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 15px;
+}
 
-    .header button {
-        white-space: nowrap;           /* Forces the text to stay on a single line */
-        font-size: 11px !important;     /* Shrinks the font slightly for mobile */
-        padding: 4px 10px !important;   /* Reduces left/right padding to save horizontal space */
-    }
+    .header button  {
+    white-space: nowrap;
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+}
 
     /* 3. Overridden to cover full screen width on mobile viewports */
-    .left {
-        width: 100% !important;
-    }
+    .left  {
+    width: 100% !important;
+}
 }
