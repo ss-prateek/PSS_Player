@@ -8,7 +8,7 @@ http.createServer((req, res) => {
     // Extract base path to bypass query params (like cache-busting timestamp)
     let filePath = '.' + req.url.split('?')[0];
     if (filePath === './' || filePath === './index.html') {
-        filePath = './pssplayer.html';
+        filePath = './index.html';
     }
 
     const extname = path.extname(filePath);
